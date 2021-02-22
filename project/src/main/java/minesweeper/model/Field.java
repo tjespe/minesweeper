@@ -1,11 +1,11 @@
 package minesweeper.model;
 
-public class Tile {
+public class Field {
     private boolean hasBomb;
     private boolean isOpened;
     private boolean isFlagged;
 
-    public Tile(boolean bomb) {
+    public Field(boolean bomb) {
         this.hasBomb = bomb;
         this.isOpened = false;
         this.isFlagged = false;
