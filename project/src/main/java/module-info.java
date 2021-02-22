@@ -1,4 +1,4 @@
-open module todolist {
+open module minesweeper {
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
