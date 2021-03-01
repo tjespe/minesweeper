@@ -120,13 +120,18 @@ public class Board {
         Board board = new Board(10, 10, 10);
         Scanner scanner = new Scanner(System.in);
         while (board.getStatus() == PLAYING) {
-            System.out.println(board);
-            System.out.print("Hvilken rad vil du åpne? [0-" + Integer.toString(board.fields.size() - 1) + "] ");
-            int y = Integer.parseInt(scanner.nextLine());
-            System.out.print(
-                    "Hvilken kolonne vil du åpne? [0-" + Integer.toString(board.fields.get(y).size() - 1) + "] ");
-            int x = Integer.parseInt(scanner.nextLine());
-            board.openField(x, y);
+            try {
+                System.out.println(board);
+                System.out.print("Hvilken rad vil du åpne? [0-" + Integer.toString(board.fields.size() - 1) + "] ");
+                int y = Integer.parseInt(scanner.nextLine());
+                System.out.print(
+                        "Hvilken kolonne vil du åpne? [0-" + Integer.toString(board.fields.get(y).size() - 1) + "] ");
+                int x = Integer.parseInt(scanner.nextLine());
+                board.openField(x, y);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Please try again.");
+            }
         }
         System.out.println(board);
         char status = board.getStatus();
