@@ -41,6 +41,15 @@ public class Board {
         return this.fields.get(y).get(x);
     }
 
+    public char getFieldStatus(int x, int y) {
+        // TODO: Check that we actually need this method
+        return getField(x, y).getStatus();
+    }
+
+    public boolean getFieldHasBomb(int x, int y) {
+        return getField(x, y).getHasBomb();
+    }
+
     public Collection<int[]> getAdjacentFields(int x, int y) {
         int height = this.fields.size();
         int width = this.fields.get(0).size();
