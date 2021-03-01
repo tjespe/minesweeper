@@ -20,7 +20,7 @@
             <RowConstraints maxHeight="355.6666679382324" minHeight="10.0" prefHeight="336.99999872843426" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <GridPane fx:id="toolbar" prefHeight="45.0" prefWidth="680.0">
+            <GridPane fx:id="toolbar" prefHeight="45.0" prefWidth="680.0" style="-fx-background-color: grey;">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
