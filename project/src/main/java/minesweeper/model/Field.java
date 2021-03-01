@@ -18,6 +18,8 @@ public class Field {
     public void open() throws IllegalStateException {
         if (this.isOpened)
             throw new IllegalStateException("This field has already been opened");
+        if (this.isFlagged)
+            throw new IllegalStateException("You cannot open a flagged field");
         this.isOpened = true;
     }
 
