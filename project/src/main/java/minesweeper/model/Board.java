@@ -52,15 +52,15 @@ public class Board {
     }
 
     public String toString() {
-        String result = "";
+        StringBuilder bld = new StringBuilder();
         for (int y = 0; y < this.fields.size(); y++) {
             ArrayList<Field> row = this.fields.get(y);
             for (int x = 0; x < row.size(); x++) {
-                result += row.get(x).toString(getAdjacentBombs(x, y)) + " ";
+                bld.append(row.get(x).toString(getAdjacentBombs(x, y)) + " ");
             }
-            result += "\n";
+            bld.append("\n");
         }
-        return result;
+        return bld.toString();
     }
 
     public static void main(String[] args) {
