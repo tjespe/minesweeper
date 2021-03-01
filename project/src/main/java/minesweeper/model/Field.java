@@ -42,8 +42,8 @@ public class Field {
         if (hasBomb)
             return "💣";
         if (adjacentBombs > 0)
-            return Integer.toString(adjacentBombs);
-        return " ";
+            return " " + Integer.toString(adjacentBombs);
+        return "  ";
     }
 
 }
