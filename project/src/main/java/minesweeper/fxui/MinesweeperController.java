@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Labeled;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import minesweeper.model.Board;
 
 
@@ -22,14 +21,15 @@ public class MinesweeperController {
 		
 		
 		
-		Board board = new Board(20,10,20);
+		Board board = new Board(14,18,40);
 		
 		//create board tiles 
 		boardParent.getChildren().clear();
 		for (int col = 0; col < 18; col++) {
 			for (int row = 0; row < 14; row++) {
 				createBoardTile(col, row);
-				((Labeled) boardParent.getChildren().get(col*14+row)).setText("1");
+				//((Labeled) boardParent.getChildren().get(col*14+row)).setText("1");
+				boardParent.getChildren().get(col*14+row);
 				//board.fields.get();
 				
 			}
