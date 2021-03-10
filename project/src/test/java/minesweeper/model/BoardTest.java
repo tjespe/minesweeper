@@ -4,15 +4,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class BoardTest {
-
-	private Board board;
-	private int bombs = 10;
-	private int width = 10;
-	private int height = 10;
 
 	/**
 	 * Helper method for checking that a list of coordinates contain the expected
@@ -29,23 +23,33 @@ public class BoardTest {
 		}
 	}
 
-	@BeforeEach
-	public void setup() {
-		board = new Board(height, width, bombs);
+	private int[] getFieldFromBoard(Board board, boolean shouldHaveBomb) {
+		for (int col = 0; col < board.getWidth(); col++) {
+			for (int row = 0; row < board.getHeight(); row++) {
+				if (board.getFieldHasBomb(col, row) == shouldHaveBomb) {
+					return new int[] { col, row };
+				}
+			}
+		}
+		throw new Error("Could not find a field that fit the requirements");
 	}
 
 	@Test
 	public void testConstructor() {
+		int height = 10, width = 10, bombs = 10;
+		Board board = new Board(height, width, bombs);
 		int countedBombs = 0;
 		for (int x = 0; x < width; x++)
 			for (int y = 0; y < height; y++)
 				if (board.getFieldHasBomb(x, y))
 					countedBombs++;
-		Assertions.assertEquals(this.bombs, countedBombs);
+		Assertions.assertEquals(bombs, countedBombs);
 	}
 
 	@Test
 	public void testGetAdjacentFields() {
+		Board board = new Board(10, 10, 10);
+
 		// Check top left corner
 		int x1 = 0, y1 = 0;
 		int[][] expectedAdjacent1 = { { 0, 1 }, { 1, 1 }, { 1, 0 } };
@@ -73,32 +77,76 @@ public class BoardTest {
 		Board smallBoard = new Board(2, 2, 3);
 
 		// Find the field that does not have a bomb
-		int x = -1, y = -1;
-		for (int col = 0; col < 2; col++) {
-			for (int row = 0; row < 2; row++) {
-				if (!smallBoard.getFieldHasBomb(row, col)) {
-					x = col;
-					y = row;
-				}
-			}
-		}
-
-		// Check that we found the field
-		Assertions.assertNotEquals(-1, x);
-		Assertions.assertNotEquals(-1, y);
+		int[] coords = getFieldFromBoard(smallBoard, false);
 
 		// Check that the field has 3 adjacent bombs
-		Assertions.assertEquals(3, smallBoard.countAdjacentBombs(x, y));
+		Assertions.assertEquals(3, smallBoard.countAdjacentBombs(coords[0], coords[1]));
 	}
 
 	@Test
 	public void testOpenField() {
-		// TODO: Check that the method works
+		// Create a 10x10 board with 1 bomb
+		Board board = new Board(10, 10, 1);
+
+		// Find the bomb
+		int[] bombCoords = getFieldFromBoard(board, true);
+
+		// Get an adjacent field of the bomb field
+		int[] adjacCoords = board.getAdjacentFields(bombCoords[0], bombCoords[1]).iterator().next();
+
+		// Get an adjacent field of the adjacent field that is not adjacent to the bomb
+		int[] fieldToOpen = board.getAdjacentFields(adjacCoords[0], adjacCoords[1]).stream()
+				.filter(coords -> !board.getFieldHasBomb(coords[0], coords[1])
+						&& board.countAdjacentBombs(coords[0], coords[1]) == 0)
+				.findFirst().orElseThrow();
+
+		// Open the field without bomb
+		board.openField(fieldToOpen[0], fieldToOpen[1]);
+
+		// Check that adjacent fields were opened automatically
+		for (int[] coords : board.getAdjacentFields(fieldToOpen[0], fieldToOpen[1]))
+			Assertions.assertEquals(Field.OPENED, board.getFieldStatus(coords[0], coords[1]),
+					"Expected " + Arrays.toString(coords) + " to be opened since it is adjacent to "
+							+ Arrays.toString(fieldToOpen)
+							+ " and does not have a bomb. Here is what the board looks like:\n" + board.toString());
+
+		// Validate that the bomb was not opened automatically
+		Assertions.assertEquals(Field.UNOPENED, board.getFieldStatus(bombCoords[0], bombCoords[1]));
+
 	}
 
 	@Test
-	public void testGetStatus() {
-		// TODO: Check that the method works
+	public void testUserCanWin() {
+		// Create a 2x2 board with 1 bomb
+		Board board = new Board(2, 2, 1);
+
+		// Check that user has not won yet
+		Assertions.assertEquals(Board.PLAYING, board.getStatus());
+
+		// Open all fields that do not have a bomb
+		for (int x = 0; x < 2; x++)
+			for (int y = 0; y < 2; y++)
+				if (!board.getFieldHasBomb(x, y) && board.getFieldStatus(x, y) != Field.OPENED)
+					board.openField(x, y);
+
+		// Check that user won
+		Assertions.assertEquals(Board.WON, board.getStatus());
+	}
+
+	@Test
+	public void testUserCanLose() {
+		// Create a 2x2 board with 1 bomb
+		Board smallBoard = new Board(2, 2, 1);
+
+		// Check that user has not lost yet
+		Assertions.assertEquals(Board.PLAYING, smallBoard.getStatus());
+
+		// Open the bomb field
+		int[] coords = getFieldFromBoard(smallBoard, true);
+		smallBoard.openField(coords[0], coords[1]);
+
+		// Check that user lost
+		Assertions.assertEquals(Board.LOST, smallBoard.getStatus());
 	}
 
 }
