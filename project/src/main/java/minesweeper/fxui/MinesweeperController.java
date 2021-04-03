@@ -1,12 +1,22 @@
 package minesweeper.fxui;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import minesweeper.model.Board;
 import minesweeper.model.Field;
 
@@ -24,23 +34,15 @@ public class MinesweeperController {
 		dropDown.setValue("Normal");
 		dropDown.setOnAction(event -> {changeDifficultLevel();});
 		board = new Board(14,18,40);
-		drawBoard();
-		
-		
+		drawBoard();	
 	}
 	
 	private void drawBoard() {
-		
-		
 		//create board tiles 
 		boardParent.getChildren().clear();
 		for (int col = 0; col < 18; col++) {
 			for (int row = 0; row < 14; row++) {
 				createBoardField(col, row);
-				//((Labeled) boardParent.getChildren().get(col*14+row)).setText("1");
-				//boardParent.getChildren().get(col*14+row);
-				
-				//board.getFieldStatus(col, row);
 			}
 		}
 		
@@ -50,22 +52,42 @@ public class MinesweeperController {
 			System.out.println("You won");
 		} else if (board.getStatus() == 'l') {
 			System.out.println("You lost");
-		}
-		
+		}	
 	}
 
-	private void createBoardField(int row, int col) {
-		//Button field = new Button();
-        Pane field = new Pane();
-		//button.setText(" ");
-        //button.setMaxSize(40, 40);
+	private void createBoardField(int row, int col) { //TODO divide into several methods
+        StackPane field = new StackPane();
         field.setTranslateX(row);
 		field.setTranslateY(col);
 		field.setPrefWidth(30);
 		field.setPrefHeight(30);
-		field.setStyle("-fx-background-color: " + getFieldStyle(board.getFieldStatus(row,col))); //#1db121
-        boardParent.add(field, row+1, col+1);
+		field.setStyle("-fx-background-color: " + getFieldStyle(board.getFieldStatus(row,col)));
+		if (board.getFieldStatus(row,col) == 'b') {
+			Image imgBomb = new Image("file:bomb1.png");
+			ImageView imgBombView = new ImageView(imgBomb);
+			field.getChildren().add(imgBombView);
+			
+			//TODO handle fail if image doesen't load and make folder for images
+		}
 		
+		if (board.countAdjacentBombs(row, col) != 0 && board.getFieldStatus(row,col) == 'o') {
+			Text numOfAdjacentBombs = new Text();
+			int adjacentBombNum = board.countAdjacentBombs(row, col);
+			if (adjacentBombNum == 1) {
+				numOfAdjacentBombs.setFill(Color.BLUE);
+			} else if (adjacentBombNum == 2) {
+				numOfAdjacentBombs.setFill(Color.GREEN);
+			} else if (adjacentBombNum == 3) {
+				numOfAdjacentBombs.setFill(Color.RED);
+			} else if (adjacentBombNum == 4) {
+				numOfAdjacentBombs.setFill(Color.DARKORCHID);
+			}
+			numOfAdjacentBombs.setText(String.valueOf(board.countAdjacentBombs(row, col)));
+			numOfAdjacentBombs.setFont(Font.font ("Verdana", FontWeight.BOLD, 18));
+			StackPane.setAlignment(numOfAdjacentBombs, Pos.CENTER);
+			field.getChildren().add(numOfAdjacentBombs);
+		}
+        boardParent.add(field, row+1, col+1);
 	}
 	
 	@FXML
@@ -74,36 +96,30 @@ public class MinesweeperController {
 	}
 	
 	@FXML
-	public void boardMouseClickedHandler(MouseEvent e) {
-		Node boardField = e.getPickResult().getIntersectedNode();
+	public void boardMouseClickedHandler(MouseEvent event) {
+		Node boardField = event.getPickResult().getIntersectedNode();
 		int x = GridPane.getColumnIndex(boardField).intValue();
 		int y = GridPane.getRowIndex(boardField).intValue();
-		System.out.println(x+","+y);
-		if (e.getButton() == MouseButton.PRIMARY) {
-			System.out.println("Left button clicked");
+		if (event.getButton() == MouseButton.PRIMARY) {
 			board.openField(x-1,y-1);
 			drawBoard();
-		} else if (e.getButton() == MouseButton.SECONDARY) {
-			System.out.println("Right button clicked");
-			//TODO toggle flag 
+		} /*else if (event.getButton() == MouseButton.SECONDARY) {
+			board.getField(x-1,y-1).toggleFlag();
+			drawBoard();
 		}
-		
+		*/
 	}
-	
-	
 	
 	private String getFieldStyle(char fieldStatus) {
 		if (fieldStatus == 'u') {
-			return "#1db121";
+			return "#73b504"; //darker green #66a103
 		} else if (fieldStatus == 'f') {
-			return "#FF0000";
+			return "#ff0000";
 		} else if (fieldStatus == 'o') {
-			return "#ffffff";
+			return "#C39B77"; //darker brown #b6916f
 		} else if (fieldStatus == 'b') {
-			return "#000000";
+			return "#C39B77"; //black for testing "#000000"
 		}
-		return null;
-		
+		return null;	
 	}
-	
 }
