@@ -1,31 +1,35 @@
 package minesweeper.fxui;
 
+import javafx.util.Duration;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import minesweeper.model.Board;
-import minesweeper.model.Field;
 
 
 public class MinesweeperController {
 
 	@FXML private ChoiceBox<String> dropDown;
 	@FXML private GridPane boardParent;
+	@FXML private Text timer;
+	@FXML private Text highscoreLinkText;
+	
 	private Board board;
+	private Timeline timeline;
 	
 	
 	
@@ -35,6 +39,7 @@ public class MinesweeperController {
 		dropDown.setOnAction(event -> {changeDifficultLevel();});
 		board = new Board(14,18,40);
 		drawBoard();	
+		timer();
 	}
 	
 	private void drawBoard() {
@@ -52,6 +57,7 @@ public class MinesweeperController {
 			System.out.println("You won");
 		} else if (board.getStatus() == 'l') {
 			System.out.println("You lost");
+			timeline.stop();
 		}	
 	}
 
@@ -121,5 +127,27 @@ public class MinesweeperController {
 			return "#C39B77"; //black for testing "#000000"
 		}
 		return null;	
+	}
+	
+	@FXML
+	public void showHighscores() {
+		System.out.println("highscores");
+		//TODO showHighscore display
+	}
+	@FXML
+	public void highscoreHoverEffectEntered() {
+		highscoreLinkText.setStyle("-fx-font-size: 14px;");
+	}
+	@FXML
+	public void highscoreHoverEffectExited() {
+		highscoreLinkText.setStyle("-fx-font-size: 12px;");
+	}
+	
+	private void timer() {
+		timeline = new Timeline(new KeyFrame(
+		        Duration.millis(1000),
+		        actionEvent -> System.out.println("hei")));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
 	}
 }
