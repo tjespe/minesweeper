@@ -46,7 +46,13 @@
                         <Font name="Verdana Bold" size="12.0" />
                      </font>
                   </Text>
-                  <Text fx:id="timer" strokeType="OUTSIDE" strokeWidth="0.0" text="Timer" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                  <Text fx:id="timer" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" GridPane.columnIndex="2" GridPane.halignment="CENTER">
+                     <font>
+                        <Font name="Verdana Bold" size="12.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Text>
                   <ImageView id="flagInToolbar" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                      <image>
                         <Image url="file:redFlag1.png" />

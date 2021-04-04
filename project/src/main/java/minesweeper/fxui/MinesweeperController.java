@@ -19,18 +19,20 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import minesweeper.model.Board;
+import minesweeper.model.Stopwatch;
 
 
 public class MinesweeperController {
 
+	private Board board;
+	private Timeline timeline;
+	private Stopwatch stopwatch;
+	private boolean gameStarted = false; //for testing
+	
 	@FXML private ChoiceBox<String> dropDown;
 	@FXML private GridPane boardParent;
 	@FXML private Text timer;
 	@FXML private Text highscoreLinkText;
-	
-	private Board board;
-	private Timeline timeline;
-	
 	
 	
 	public void initialize() {
@@ -39,11 +41,11 @@ public class MinesweeperController {
 		dropDown.setOnAction(event -> {changeDifficultLevel();});
 		board = new Board(14,18,40);
 		drawBoard();	
-		timer();
+		//timer();
+		//startTime = System.currentTimeMillis();
 	}
 	
 	private void drawBoard() {
-		//create board tiles 
 		boardParent.getChildren().clear();
 		for (int col = 0; col < 18; col++) {
 			for (int row = 0; row < 14; row++) {
@@ -56,11 +58,11 @@ public class MinesweeperController {
 		if (board.getStatus() == 'w') {
 			System.out.println("You won");
 		} else if (board.getStatus() == 'l') {
-			System.out.println("You lost");
 			timeline.stop();
-		}	
+			System.out.println("You lost");
+		}		
 	}
-
+	
 	private void createBoardField(int row, int col) { //TODO divide into several methods
         StackPane field = new StackPane();
         field.setTranslateX(row);
@@ -108,6 +110,11 @@ public class MinesweeperController {
 		int y = GridPane.getRowIndex(boardField).intValue();
 		if (event.getButton() == MouseButton.PRIMARY) {
 			board.openField(x-1,y-1);
+			if (!gameStarted) {						//TODO find better solution
+				stopwatch = new Stopwatch();	
+				timer();
+				gameStarted = true;
+			}
 			drawBoard();
 		} /*else if (event.getButton() == MouseButton.SECONDARY) {
 			board.getField(x-1,y-1).toggleFlag();
@@ -142,12 +149,12 @@ public class MinesweeperController {
 	public void highscoreHoverEffectExited() {
 		highscoreLinkText.setStyle("-fx-font-size: 12px;");
 	}
-	
+	//TODO move this to stopwatch class (Stopwatch.java)
 	private void timer() {
 		timeline = new Timeline(new KeyFrame(
 		        Duration.millis(1000),
-		        actionEvent -> System.out.println("hei")));
+		        actionEvent -> timer.setText(stopwatch.updateTime())));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
-	}
+	}	
 }
