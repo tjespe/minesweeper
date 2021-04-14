@@ -5,10 +5,10 @@ public class Field {
     private boolean isOpened;
     private boolean isFlagged;
 
-    protected static final char UNOPENED = 'u';
-    protected static final char FLAGGED = 'f';
-    protected static final char OPENED = 'o';
-    protected static final char BOMB = 'b';
+    public static final char UNOPENED = 'u';
+    public static final char FLAGGED = 'f';
+    public static final char OPENED = 'o';
+    public static final char BOMB = 'b';
 
     public Field(boolean bomb) {
         this.hasBomb = bomb;

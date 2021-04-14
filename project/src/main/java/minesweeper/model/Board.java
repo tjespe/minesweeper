@@ -19,8 +19,13 @@ public class Board {
 
     private static final int[][] ADJACENCY_OFFSETS = { ABOVE, BELOW, LEFT, RIGHT, LEFTABOVE, RIGHTABOVE, RIGHTBELOW,
             LEFTBELOW };
+    
+    public static final int EASY = 0;    
+    public static final int NORMAL = 1;    
+    public static final int HARD = 2;
+    
+    private void createFields(int height, int width, int bombCount) {
 
-    public Board(int height, int width, int bombCount) {
         fields = new ArrayList<>();
         int placedBombs = 0;
         for (int i = 0; i < height; i++) {
@@ -35,6 +40,32 @@ public class Board {
             }
             fields.add(row);
         }
+    }
+
+    public Board(int height, int width, int bombCount) {
+    	this.createFields(height, width, bombCount);
+    }
+    
+    public Board(int difficulty) {
+    	switch (difficulty) {
+		case EASY: {
+			this.createFields(8, 10, 10);
+			break;
+		}
+		case NORMAL: {
+
+			this.createFields(14, 18, 40);
+			break;
+		}
+		case HARD: {
+
+			this.createFields(17, 21, 80);
+			break;
+		}
+			
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + difficulty);
+		}
     }
 
     private Field getField(int x, int y) {
@@ -94,9 +125,9 @@ public class Board {
         }
     }
 
-    protected static final char WON = 'w';
-    protected static final char LOST = 'l';
-    protected static final char PLAYING = 'p';
+    public static final char WON = 'w';
+    public static final char LOST = 'l';
+    public static final char PLAYING = 'p';
 
     public char getStatus() {
         boolean someNotOpened = false;
