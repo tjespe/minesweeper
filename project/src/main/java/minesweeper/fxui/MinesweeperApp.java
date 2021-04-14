@@ -6,15 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class MinesweeperApp extends Application{
+public class MinesweeperApp extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Parent parent = FXMLLoader.load(getClass().getResource("MinesweeperNormal.fxml"));
 		stage.setTitle("Minesweeper");
 		stage.setScene(new Scene(parent));
 		stage.show();
+		stage.setResizable(false);
 	}
-	
+
 	public static void main(String[] args) {
 		launch(MinesweeperApp.class, args);
 	}

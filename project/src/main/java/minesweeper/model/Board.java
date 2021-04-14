@@ -19,13 +19,12 @@ public class Board {
 
     private static final int[][] ADJACENCY_OFFSETS = { ABOVE, BELOW, LEFT, RIGHT, LEFTABOVE, RIGHTABOVE, RIGHTBELOW,
             LEFTBELOW };
-    
-    public static final int EASY = 0;    
-    public static final int NORMAL = 1;    
-    public static final int HARD = 2;
-    
-    private void createFields(int height, int width, int bombCount) {
 
+    public static final String EASY = "Easy";
+    public static final String NORMAL = "Normal";
+    public static final String HARD = "Hard";
+
+    private void createFields(int height, int width, int bombCount) {
         fields = new ArrayList<>();
         int placedBombs = 0;
         for (int i = 0; i < height; i++) {
@@ -43,29 +42,18 @@ public class Board {
     }
 
     public Board(int height, int width, int bombCount) {
-    	this.createFields(height, width, bombCount);
+        this.createFields(height, width, bombCount);
     }
-    
-    public Board(int difficulty) {
-    	switch (difficulty) {
-		case EASY: {
-			this.createFields(8, 10, 10);
-			break;
-		}
-		case NORMAL: {
 
-			this.createFields(14, 18, 40);
-			break;
-		}
-		case HARD: {
-
-			this.createFields(17, 21, 80);
-			break;
-		}
-			
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + difficulty);
-		}
+    public Board(String difficulty) {
+        if (difficulty.equals(Board.EASY))
+            this.createFields(8, 10, 10);
+        else if (difficulty.equals(Board.NORMAL))
+            this.createFields(14, 18, 40);
+        else if (difficulty.equals(Board.HARD))
+            this.createFields(17, 21, 80);
+        else
+            throw new IllegalArgumentException("Unexpected value: " + difficulty);
     }
 
     private Field getField(int x, int y) {
