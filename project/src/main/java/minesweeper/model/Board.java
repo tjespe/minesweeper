@@ -41,6 +41,14 @@ public class Board {
         return this.fields.get(y).get(x);
     }
 
+    public int getHeight() {
+        return this.fields.size();
+    }
+
+    public int getWidth() {
+        return this.fields.get(0).size();
+    }
+
     public char getFieldStatus(int x, int y) {
         // TODO: Check that we actually need this method
         return getField(x, y).getStatus();
