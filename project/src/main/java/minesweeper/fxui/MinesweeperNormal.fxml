@@ -58,7 +58,7 @@
                   </Text>
                   <ImageView id="flagInToolbar" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
 
-                     <Image url="file:redFlag1.png" />
+                     <Image url="/redFlag1.png" />
 
                      <GridPane.margin>
                         <Insets left="12.0" />
@@ -74,7 +74,7 @@
                         <Insets left="25.0" />
                      </GridPane.margin>
                      <image>
-                        <Image url="file:stopwatch1.png" />
+                        <Image url="/stopwatch1.png" />
                      </image>
                   </ImageView>
                </children>
