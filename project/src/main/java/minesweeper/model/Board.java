@@ -50,14 +50,7 @@ public class Board {
 
     public Board(DifficultyLevel difficulty) {
         this.stopwatch = new Stopwatch();
-        if (difficulty == (DifficultyLevel.EASY))
-            this.createFields(8, 10, 10);
-        else if (difficulty.equals(DifficultyLevel.NORMAL))
-            this.createFields(14, 18, 40);
-        else if (difficulty.equals(DifficultyLevel.HARD))
-            this.createFields(17, 21, 80);
-        else
-            throw new IllegalArgumentException("Unexpected value: " + difficulty);
+        this.createFields(difficulty.getHeight(), difficulty.getWidth(), difficulty.getBombs());
     }
 
     public Board(String serializedState) {
@@ -77,6 +70,15 @@ public class Board {
                 // Collect the stream of rows in a List
                 .collect(Collectors.toList());
 
+    }
+
+    public DifficultyLevel getDifficulty() {
+        for (DifficultyLevel level : DifficultyLevel.getAll()) {
+            if (level.getBombs() == this.getBombCount() && level.getHeight() == this.getHeight()
+                    && level.getWidth() == this.getWidth())
+                return level;
+        }
+        return null;
     }
 
     private Field getField(int x, int y) {

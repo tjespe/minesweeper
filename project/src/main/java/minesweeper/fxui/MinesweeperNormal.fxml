@@ -12,7 +12,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
+<AnchorPane fx:id="rootPane"
+   xmlns="http://javafx.com/javafx/15.0.1"
+   xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
    <children>
       <GridPane fx:id="gridPane" prefHeight="455.0" prefWidth="558.0">
          <columnConstraints>
@@ -85,7 +87,14 @@
                </children>
             </GridPane>
             <GridPane fx:id="boardParent" onMouseClicked="#boardMouseClickedHandler" GridPane.rowIndex="1">
+            </GridPane>
 
+            <GridPane GridPane.rowIndex="2" prefHeight="25.0">
+               <Text fx:id="saveStatus" strokeWidth="0.0" text="Not saved" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                  <font>
+                     <Font style="-fx-font-style: italic" name="Verdana" size="12.0" />
+                  </font>
+               </Text>
             </GridPane>
          </children>
       </GridPane>
