@@ -1,6 +1,6 @@
 package minesweeper.model;
 
-public class FileHandlerGame implements IReadAndWriteFile {
+public class FileHandlerGame implements ReadAndWriteFile {
 
 	@Override
 	public void readFromFile() {
