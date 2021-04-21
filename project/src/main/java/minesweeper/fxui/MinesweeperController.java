@@ -182,7 +182,10 @@ public class MinesweeperController implements StopwatchListener {
 		if (board != null) {
 			board.removeStopwatchListener(this);
 		}
-		board = new Board(DifficultyLevel.getByLabel(dropDown.getValue()));
+		DifficultyLevel level = DifficultyLevel.getByLabel(dropDown.getValue());
+		if (level == null)
+			level = DifficultyLevel.NORMAL;
+		board = new Board(level);
 		this.initializeHighscores();
 		drawBoard();
 		board.addStopwatchListener(this);
@@ -248,10 +251,10 @@ public class MinesweeperController implements StopwatchListener {
 
 	public void showGameWonModal() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
+		Parent gameWonScene = loader.load();
 		GameWonController childController = loader.getController();
 		if (childController != null)
 			childController.setParentController(this);
-		Parent gameWonScene = loader.load();
 		Stage newWindow = new Stage();
 		newWindow.setTitle("You won!");
 		newWindow.setScene(new Scene(gameWonScene));
@@ -268,6 +271,10 @@ public class MinesweeperController implements StopwatchListener {
 	@Override
 	public void timeChanged(String newTimeValue) {
 		timer.setText(newTimeValue);
+	}
+
+	public String getCurrentTime() {
+		return timer.getText();
 	}
 
 	public void updateFlagCount() {
