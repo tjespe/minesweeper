@@ -21,7 +21,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import minesweeper.model.Board;
-import minesweeper.model.BoardSaver;
+import minesweeper.model.ReadAndWriteBoard;
 import minesweeper.model.DifficultyLevel;
 import minesweeper.model.Field;
 import minesweeper.model.StopwatchListener;
@@ -30,7 +30,7 @@ public class MinesweeperController implements StopwatchListener {
 
 	private Board board;
 
-	private static BoardSaver boardSaver = new BoardSaver();
+	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
 
 	@FXML
 	private ChoiceBox<String> dropDown;

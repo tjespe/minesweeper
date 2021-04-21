@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Scanner;
 
-public class BoardSaver implements ReadAndWriteFile<Board> {
+public class ReadAndWriteBoard implements ReadAndWriteFile<Board> {
 	private static final String FILE_PATH = System.getProperty("user.home") + "/game-state.mswp";
 
 	@Override
