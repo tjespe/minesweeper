@@ -36,6 +36,16 @@ public class Stopwatch {
 		timeline.play();
 	}
 
+	public void setTime(String time) {
+		String[] parts = time.split(":");
+		String minuteString = parts[0];
+		String secondsString = parts[1];
+		long minutes = Long.parseLong(minuteString);
+		long seconds = Long.parseLong(secondsString);
+		long now = System.currentTimeMillis();
+		this.startTime = now - (minutes * 60 * 1000) - seconds * 1000;
+	}
+
 	public void stop() {
 		if (!this.hasStarted())
 			throw new IllegalStateException("Cannot stop before starting");

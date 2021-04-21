@@ -6,7 +6,9 @@ public class Field {
     private boolean isFlagged;
 
     public static final char UNOPENED = 'u';
+    public static final char UNOPENED_WITH_BOMB = 'U';
     public static final char FLAGGED = 'f';
+    public static final char FLAGGED_WITH_BOMB = 'F';
     public static final char OPENED = 'o';
     public static final char BOMB = 'b';
 
@@ -16,10 +18,18 @@ public class Field {
         this.isFlagged = false;
     }
 
+    public Field(char status) {
+        this.isFlagged = status == FLAGGED || status == FLAGGED_WITH_BOMB;
+        this.hasBomb = status == BOMB || status == FLAGGED_WITH_BOMB || status == UNOPENED_WITH_BOMB;
+        this.isOpened = status == OPENED;
+    }
+
     public char getStatus() {
         if (!isOpened) {
             if (isFlagged)
-                return FLAGGED;
+                return hasBomb ? FLAGGED_WITH_BOMB : FLAGGED;
+            if (hasBomb)
+                return UNOPENED_WITH_BOMB;
             return UNOPENED;
         }
         if (hasBomb)

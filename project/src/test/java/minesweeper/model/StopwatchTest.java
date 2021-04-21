@@ -3,14 +3,7 @@ package minesweeper.model;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import javafx.util.Duration;
-import javafx.util.Pair;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 
 class MockedListener implements StopwatchListener {
     public ArrayList<String> receivedValues = new ArrayList<>();
@@ -22,20 +15,7 @@ class MockedListener implements StopwatchListener {
 
 }
 
-public class StopwatchTest {
-    @BeforeAll
-    public static void initializeJavaFX() {
-        /**
-         * It seems like there is a bug in JavaFX that causes a NullPointerException is
-         * thrown the first time the play method is called on the Java Timeline class.
-         */
-        try {
-            new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> {
-            })).play();
-        } catch (NullPointerException e) {
-        }
-
-    }
+public class StopwatchTest extends TestWithJavaFXTimeline {
 
     @Test
     public void addAndRemoveListenerTest() {
@@ -92,6 +72,14 @@ public class StopwatchTest {
     public void getTimeTest() {
         Stopwatch stopwatch = new Stopwatch();
         Assertions.assertEquals("00:00", stopwatch.getTime());
+    }
+
+    @Test
+    public void setTimeTest() {
+        String time = "03:24";
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.setTime(time);
+        Assertions.assertEquals(time, stopwatch.getTime());
     }
 
 }
