@@ -28,14 +28,18 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import minesweeper.model.Board;
 import minesweeper.model.ReadAndWriteBoard;
+import minesweeper.model.ReadAndWriteHighscoreList;
 import minesweeper.model.DifficultyLevel;
 import minesweeper.model.Field;
+import minesweeper.model.HighscoreList;
 import minesweeper.model.StopwatchListener;
 
 public class MinesweeperController implements StopwatchListener {
 
 	private Board board;
+	private HighscoreList highscores;
 
+	private static ReadAndWriteHighscoreList highscoreSaver = new ReadAndWriteHighscoreList();
 	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
 
 	@FXML
@@ -64,6 +68,7 @@ public class MinesweeperController implements StopwatchListener {
 			drawBoard();
 			DifficultyLevel level = board.getDifficulty();
 			dropDown.setValue(level != null ? level.getLabel() : "Unknown");
+			this.initializeHighscores();
 			saveStatus.setText("Loaded saved game");
 		} catch (IOException exception) {
 			dropDown.setValue(DifficultyLevel.NORMAL.getLabel());
@@ -73,7 +78,15 @@ public class MinesweeperController implements StopwatchListener {
 		dropDown.setOnAction(event -> {
 			newGameWithSelectedLevel();
 		});
+	}
 
+	public void initializeHighscores() {
+		try {
+			// TODO: Make sure to read correct file based on difficulty level
+			highscores = highscoreSaver.readFromFile();
+		} catch (IOException e) {
+			highscores = new HighscoreList();
+		}
 	}
 
 	private void drawBoard() {
@@ -88,13 +101,16 @@ public class MinesweeperController implements StopwatchListener {
 			}
 		}
 
-		// TODO ADD METHODS FOR LOST AND WON AND STYLE
 		if (board.getStatus() == Board.WON) {
 			try {
 				this.showGameWonModal();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("An error occurred!");
+				alert.setHeaderText("An error occurred!");
+				alert.setContentText(
+						"You won the game, and a modal for saving your score should have been shown, but an unexpected error occurred.");
+				alert.showAndWait();
 			}
 		} else if (board.getStatus() == Board.LOST) {
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -113,22 +129,32 @@ public class MinesweeperController implements StopwatchListener {
 		}
 	}
 
-	private void drawBoardField(int row, int col) { // TODO divide into several methods
+	private void drawBoardField(int row, int col) {
 		StackPane field = new StackPane();
 		field.setPrefWidth(30);
 		field.setPrefHeight(30);
 		char fieldStatus = board.getFieldStatus(row, col);
 		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: " + getFieldStyle(fieldStatus, row, col));
 		if (fieldStatus == Field.BOMB) {
-			Image imgBomb = new Image("/bomb.png");
-			ImageView imgBombView = new ImageView(imgBomb);
-			field.getChildren().add(imgBombView);
-			// TODO handle fail if image doesen't load and make folder for images
+			try {
+				Image imgBomb = new Image("/bomb.png");
+				ImageView imgBombView = new ImageView(imgBomb);
+				field.getChildren().add(imgBombView);
+			} catch (Exception e) {
+				Text fallback = new Text("💣");
+				field.getChildren().add(fallback);
+			}
 		}
 		if (fieldStatus == Field.FLAGGED || fieldStatus == Field.FLAGGED_WITH_BOMB) {
-			Image imgRedFlag = new Image("/flag.png");
-			ImageView imgRedFlagView = new ImageView(imgRedFlag);
-			field.getChildren().add(imgRedFlagView);
+			try {
+
+				Image imgRedFlag = new Image("/flag.png");
+				ImageView imgRedFlagView = new ImageView(imgRedFlag);
+				field.getChildren().add(imgRedFlagView);
+			} catch (Exception e) {
+				Text fallback = new Text("💣");
+				field.getChildren().add(fallback);
+			}
 		}
 
 		if (board.countAdjacentBombs(row, col) != 0 && fieldStatus == Field.OPENED) {
@@ -157,6 +183,7 @@ public class MinesweeperController implements StopwatchListener {
 			board.removeStopwatchListener(this);
 		}
 		board = new Board(DifficultyLevel.getByLabel(dropDown.getValue()));
+		this.initializeHighscores();
 		drawBoard();
 		board.addStopwatchListener(this);
 		saveStatus.setText("Not saved");
@@ -203,7 +230,6 @@ public class MinesweeperController implements StopwatchListener {
 	@FXML
 	public void showHighscores() throws IOException {
 		System.out.println("highscores");
-		// TODO showHighscore display
 
 		Parent highscoreScene = FXMLLoader.load(getClass().getResource("HighscoreList.fxml"));
 		Stage newHighscoreWindow = new Stage();
