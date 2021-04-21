@@ -88,7 +88,12 @@ public class MinesweeperController implements StopwatchListener {
 
 		// TODO ADD METHODS FOR LOST AND WON AND STYLE
 		if (board.getStatus() == Board.WON) {
-			System.out.println("You won");
+			try {
+				this.showGameWonModal();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (board.getStatus() == Board.LOST) {
 			// TODO gjøre kall på get time
 			System.out.println("You lost");
@@ -169,8 +174,6 @@ public class MinesweeperController implements StopwatchListener {
 			boardSaver.writeToFile(board);
 			saveStatus.setText("Automatically saved");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			saveStatus.setText("Failed to save");
 		}
 
@@ -194,7 +197,7 @@ public class MinesweeperController implements StopwatchListener {
 	public void showHighscores() throws IOException {
 		System.out.println("highscores");
 		// TODO showHighscore display
-		
+
 		Parent highscoreScene = FXMLLoader.load(getClass().getResource("HighscoreList.fxml"));
 		Stage newHighscoreWindow = new Stage();
 		newHighscoreWindow.setTitle("Higscores");
@@ -203,10 +206,28 @@ public class MinesweeperController implements StopwatchListener {
 		Scene rootScene = rootPane.getScene();
 		if (rootScene != null) {
 			Window rootStage = rootScene.getWindow();
-			newHighscoreWindow.initOwner(rootStage);;
+			newHighscoreWindow.initOwner(rootStage);
 		}
 		newHighscoreWindow.initModality(Modality.WINDOW_MODAL);
 		newHighscoreWindow.show();
+	}
+
+	public void showGameWonModal() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
+		GameWonController childController = loader.getController();
+		childController.setParentController(this);
+		Parent gameWonScene = loader.load();
+		Stage newWindow = new Stage();
+		newWindow.setTitle("You won!");
+		newWindow.setScene(new Scene(gameWonScene));
+
+		Scene rootScene = rootPane.getScene();
+		if (rootScene != null) {
+			Window rootStage = rootScene.getWindow();
+			newWindow.initOwner(rootStage);
+		}
+		newWindow.initModality(Modality.WINDOW_MODAL);
+		newWindow.show();
 	}
 
 	@Override
