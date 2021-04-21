@@ -149,4 +149,20 @@ public class BoardTest {
 		Assertions.assertEquals(Board.LOST, smallBoard.getStatus());
 	}
 
+	@Test
+	public void testGetBombCount() {
+		int expectedBombs = 17;
+		Board board = new Board(20, 20, expectedBombs);
+		Assertions.assertEquals(expectedBombs, board.getBombCount());
+	}
+
+	@Test
+	public void testGetRemainingFlags() {
+		int bombs = 13;
+		Board board = new Board(10, 10, bombs);
+		Assertions.assertEquals(bombs, board.getRemainingFlags());
+		board.toggleFlag(5, 5);
+		Assertions.assertEquals(bombs - 1, board.getRemainingFlags());
+	}
+
 }

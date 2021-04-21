@@ -1,5 +1,12 @@
 package minesweeper.fxui;
 
+import javafx.util.Duration;
+import java.io.IOException;
+import java.net.URL;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -39,6 +46,8 @@ public class MinesweeperController implements StopwatchListener {
 	private AnchorPane rootPane;
 	@FXML
 	private GridPane gridPane;
+	@FXML
+	private Text numOfFlagsLeft;
 
 	public void initialize() {
 		dropDown.getItems().addAll(Board.EASY, Board.NORMAL, Board.HARD);
@@ -47,11 +56,13 @@ public class MinesweeperController implements StopwatchListener {
 		});
 		dropDown.setValue(Board.NORMAL);
 		applyDifficultyLevel();
+
 	}
 
 	private void drawBoard() {
 		boardParent.setLayoutX(500);
 		boardParent.getChildren().clear();
+		updateFlagCount();
 		for (int col = 0; col < board.getWidth(); col++) {
 			for (int row = 0; row < board.getHeight(); row++) {
 				createBoardField(col, row);
@@ -74,10 +85,15 @@ public class MinesweeperController implements StopwatchListener {
 		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: "
 				+ getFieldStyle(board.getFieldStatus(row, col), row, col));
 		if (board.getFieldStatus(row, col) == Field.BOMB) {
-			Image imgBomb = new Image("/bomb1.png");
+			Image imgBomb = new Image("/bomb.png");
 			ImageView imgBombView = new ImageView(imgBomb);
 			field.getChildren().add(imgBombView);
 			// TODO handle fail if image doesen't load and make folder for images
+		}
+		if (board.getFieldStatus(row, col) == Field.FLAGGED) {
+			Image imgRedFlag = new Image("/flag.png");
+			ImageView imgRedFlagView = new ImageView(imgRedFlag);
+			field.getChildren().add(imgRedFlagView);
 		}
 
 		if (board.countAdjacentBombs(row, col) != 0 && board.getFieldStatus(row, col) == Field.OPENED) {
@@ -122,6 +138,9 @@ public class MinesweeperController implements StopwatchListener {
 	@FXML
 	public void boardMouseClickedHandler(MouseEvent event) {
 		Node boardField = event.getPickResult().getIntersectedNode();
+		while (!(boardField instanceof StackPane)) {
+			boardField = boardField.getParent();
+		}
 		int x = GridPane.getColumnIndex(boardField).intValue();
 		int y = GridPane.getRowIndex(boardField).intValue();
 		if (event.getButton() == MouseButton.PRIMARY) {
@@ -130,10 +149,11 @@ public class MinesweeperController implements StopwatchListener {
 				stopwatch.startStopwatch();
 			}
 			drawBoard();
-		} /*
-			 * else if (event.getButton() == MouseButton.SECONDARY) {
-			 * board.getField(x-1,y-1).toggleFlag(); drawBoard(); }
-			 */
+		} else if (event.getButton() == MouseButton.SECONDARY) {
+			board.toggleFlag(x - 1, y - 1);
+			drawBoard();
+		}
+
 	}
 
 	private String getFieldStyle(char fieldStatus, int x, int y) {
@@ -164,9 +184,13 @@ public class MinesweeperController implements StopwatchListener {
 	public void highscoreHoverEffectExited() {
 		highscoreLinkText.setStyle("-fx-font-size: 12px;");
 	}
-
-		@Override
+  
+	@Override
 	public void timeChanged(String newTimeValue) {
 		timer.setText(newTimeValue);	
+  }
+  
+	public void updateFlagCount() {
+		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
 	}
 }
