@@ -143,6 +143,7 @@ public class MinesweeperController implements StopwatchListener {
 		board = new Board(DifficultyLevel.getByLabel(dropDown.getValue()));
 		drawBoard();
 		board.addStopwatchListener(this);
+		saveStatus.setText("Not saved");
 	}
 
 	@FXML

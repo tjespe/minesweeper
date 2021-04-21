@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class MinesweeperApp extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
-		Parent parent = FXMLLoader.load(getClass().getResource("MinesweeperNormal.fxml"));
+		Parent parent = FXMLLoader.load(getClass().getResource("Minesweeper.fxml"));
 		stage.setTitle("Minesweeper");
 		stage.setScene(new Scene(parent));
 		stage.show();

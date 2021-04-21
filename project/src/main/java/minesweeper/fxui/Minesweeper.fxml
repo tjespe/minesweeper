@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.SVGPath?>
+
+<AnchorPane fx:id="rootPane"
+   xmlns="http://javafx.com/javafx/15.0.1"
+   xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
+   <children>
+      <GridPane fx:id="gridPane" prefHeight="455.0" prefWidth="558.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="50.0" minHeight="50.0" vgrow="NEVER" />
+            <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints />
+         </rowConstraints>
+         <children>
+            <GridPane fx:id="toolbar" prefHeight="45.0" style="-fx-background-color: #eaeaea;">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="ALWAYS" />
+                  <ColumnConstraints hgrow="ALWAYS" />
+                  <ColumnConstraints hgrow="ALWAYS" />
+                  <ColumnConstraints hgrow="ALWAYS" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="ALWAYS" />
+               </rowConstraints>
+               <children>
+                  <HBox GridPane.columnIndex="1" GridPane.halignment="CENTER" alignment="CENTER">
+                     <padding>
+                        <Insets left="2.5" right="2.5" />
+                     </padding>
+                     <ChoiceBox fx:id="dropDown" prefHeight="25.0" GridPane.halignment="LEFT">
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
+                     </ChoiceBox>
+                  </HBox>
+                  <HBox GridPane.columnIndex="2" GridPane.halignment="CENTER" alignment="CENTER" spacing="5">
+                     <StackPane prefHeight="25.0" prefWidth="25.0" maxWidth="25.0" maxHeight="25.0" minWidth="25.0" minHeight="25.0">
+                        <SVGPath scaleX="0.05" scaleY="0.05" content="M336.174 80c-49.132 0-93.305-32-161.913-32-31.301 0-58.303 6.482-80.721 15.168a48.04 48.04 0 0 0 2.142-20.727C93.067 19.575 74.167 1.594 51.201.104 23.242-1.71 0 20.431 0 48c0 17.764 9.657 33.262 24 41.562V496c0 8.837 7.163 16 16 16h16c8.837 0 16-7.163 16-16v-83.443C109.869 395.28 143.259 384 199.826 384c49.132 0 93.305 32 161.913 32 58.479 0 101.972-22.617 128.548-39.981C503.846 367.161 512 352.051 512 335.855V95.937c0-34.459-35.264-57.768-66.904-44.117C409.193 67.309 371.641 80 336.174 80zM464 336c-21.783 15.412-60.824 32-102.261 32-59.945 0-102.002-32-161.913-32-43.361 0-96.379 9.403-127.826 24V128c21.784-15.412 60.824-32 102.261-32 59.945 0 102.002 32 161.913 32 43.271 0 96.32-17.366 127.826-32v240z" />
+                     </StackPane>
+                     <Text fx:id="numOfFlagsLeft" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="RIGHT">
+                        <font>
+                           <Font name="Verdana Bold" size="12.0" />
+                        </font>
+                     </Text>
+                  </HBox>
+                  <HBox GridPane.columnIndex="3" GridPane.halignment="CENTER" alignment="CENTER" spacing="5">
+                     <StackPane prefHeight="25.0" prefWidth="25.0" maxWidth="25.0" maxHeight="25.0" minWidth="25.0" minHeight="25.0">
+                        <SVGPath scaleX="0.05" scaleY="0.05" content="M393.9 184l22.6-22.6c4.7-4.7 4.7-12.3 0-17l-17-17c-4.7-4.7-12.3-4.7-17 0l-20.7 20.7c-31.1-27.5-70.4-45.9-113.8-50.8V48h28c6.6 0 12-5.4 12-12V12c0-6.6-5.4-12-12-12H172c-6.6 0-12 5.4-12 12v24c0 6.6 5.4 12 12 12h28v49.4C96.4 109.3 16 197.2 16 304c0 114.9 93.1 208 208 208s208-93.1 208-208c0-44.7-14.1-86.1-38.1-120zM224 464c-88.4 0-160-71.6-160-160s71.6-160 160-160 160 71.6 160 160-71.6 160-160 160zm12-112h-24c-6.6 0-12-5.4-12-12V204c0-6.6 5.4-12 12-12h24c6.6 0 12 5.4 12 12v136c0 6.6-5.4 12-12 12z" />
+                     </StackPane>
+                     <Text fx:id="timer" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00">
+                        <font>
+                           <Font name="Verdana Bold" size="12.0" />
+                        </font>
+                     </Text>
+                  </HBox>
+                  <Text GridPane.columnIndex="4" fx:id="highscoreLinkText" onMouseClicked="#showHighscores" strokeType="OUTSIDE" strokeWidth="0.0" text="HIGHSCORES" GridPane.halignment="CENTER">
+                     <font>
+                        <Font name="Verdana Bold" size="12.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Text>
+               </children>
+            </GridPane>
+            <GridPane fx:id="boardParent" onMouseClicked="#boardMouseClickedHandler" GridPane.rowIndex="1">
+            </GridPane>
+
+            <GridPane alignment="CENTER_RIGHT" GridPane.rowIndex="2">
+               <padding>
+                  <Insets bottom="2.5" left="5" right="5" top="2.5" />
+               </padding>
+               <children>
+                  <Text fx:id="saveStatus" strokeWidth="0.0" text="Not saved">
+                     <font>
+                        <Font name="Verdana" size="12.0" style="-fx-font-style: italic" />
+                     </font>
+                  </Text>
+               </children>
+            </GridPane>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
