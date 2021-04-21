@@ -36,8 +36,7 @@ public class MinesweeperController implements StopwatchListener {
 	private Board board;
 
 	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
-	private static ReadAndWriteHighscoreList highscoreSaver = new ReadAndWriteHighscoreList();
-
+	
 	@FXML
 	private ChoiceBox<String> dropDown;
 	@FXML
@@ -84,13 +83,18 @@ public class MinesweeperController implements StopwatchListener {
 		updateFlagCount();
 		for (int col = 0; col < board.getWidth(); col++) {
 			for (int row = 0; row < board.getHeight(); row++) {
-				createBoardField(col, row);
+				drawBoardField(col, row);
 			}
 		}
 
 		// TODO ADD METHODS FOR LOST AND WON AND STYLE
 		if (board.getStatus() == Board.WON) {
-			System.out.println("You won");
+			try {
+				this.showGameWonModal();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (board.getStatus() == Board.LOST) {
 			// TODO gjøre kall på get time
 			System.out.println("You lost");
@@ -103,7 +107,7 @@ public class MinesweeperController implements StopwatchListener {
 		}
 	}
 
-	private void createBoardField(int row, int col) { // TODO divide into several methods
+	private void drawBoardField(int row, int col) { // TODO divide into several methods
 		StackPane field = new StackPane();
 		field.setPrefWidth(30);
 		field.setPrefHeight(30);
@@ -171,8 +175,6 @@ public class MinesweeperController implements StopwatchListener {
 			boardSaver.writeToFile(board);
 			saveStatus.setText("Automatically saved");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			saveStatus.setText("Failed to save");
 		}
 
@@ -194,17 +196,37 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void showHighscores() throws IOException {
-		Parent highscoreScene = FXMLLoader.load(getClass().getResource("HighscoreList.fxml"));
-		Stage newHighscoreWindow = new Stage();
-		newHighscoreWindow.setTitle("Higscores");
-		newHighscoreWindow.setScene(new Scene(highscoreScene));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("HighscoreList.fxml"));
+		HighscoreListController highscoreListController = loader.getController();
+		Parent highscoreListScene = loader.load();
+		Stage newWindow = new Stage();
+		newWindow.setTitle("Higscores");
+		newWindow.setScene(new Scene(highscoreListScene));
 		Scene rootScene = rootPane.getScene();
 		if (rootScene != null) {
 			Window rootStage = rootScene.getWindow();
-			newHighscoreWindow.initOwner(rootStage);;
+			newWindow.initOwner(rootStage);
 		}
-		newHighscoreWindow.initModality(Modality.WINDOW_MODAL);
-		newHighscoreWindow.show();
+		newWindow.initModality(Modality.WINDOW_MODAL);
+		newWindow.show();
+	}
+
+	public void showGameWonModal() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
+		GameWonController childController = loader.getController();
+		childController.setParentController(this);
+		Parent gameWonScene = loader.load();
+		Stage newWindow = new Stage();
+		newWindow.setTitle("You won!");
+		newWindow.setScene(new Scene(gameWonScene));
+
+		Scene rootScene = rootPane.getScene();
+		if (rootScene != null) {
+			Window rootStage = rootScene.getWindow();
+			newWindow.initOwner(rootStage);
+		}
+		newWindow.initModality(Modality.WINDOW_MODAL);
+		newWindow.show();
 	}
 
 	@Override

@@ -48,6 +48,6 @@ public class HighscoreList {
 	
 	@Override
 	public String toString() {
-		return ;
+		return;
 	}
 }

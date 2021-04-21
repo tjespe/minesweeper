@@ -38,6 +38,8 @@ public class Field {
     }
 
     public void toggleFlag() {
+        if (this.isOpened)
+            throw new IllegalStateException("You cannot flag an opened field");
         this.isFlagged = !this.isFlagged;
     }
 
