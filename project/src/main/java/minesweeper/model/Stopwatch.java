@@ -63,7 +63,7 @@ public class Stopwatch {
 		return DECIMAL_FORMAT.format(minutes) + ":" + DECIMAL_FORMAT.format(seconds);
 	}
 
-	public void sendTimeUpdate() {
+	protected void sendTimeUpdate() {
 		for (StopwatchListener listener : this.stopwatchListeners)
 			listener.timeChanged(this.getTime());
 	}
