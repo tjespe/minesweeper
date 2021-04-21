@@ -37,7 +37,7 @@ import minesweeper.model.StopwatchListener;
 public class MinesweeperController implements StopwatchListener {
 
 	private Board board;
-	private HighscoreList highscores;
+	protected HighscoreList highscores;
 
 	private static ReadAndWriteHighscoreList highscoreSaver = new ReadAndWriteHighscoreList();
 	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
