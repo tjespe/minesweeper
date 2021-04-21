@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class BoardTest {
+public class BoardTest extends TestWithJavaFXTimeline {
 
 	/**
 	 * Helper method for checking that a list of coordinates contain the expected
@@ -44,6 +44,28 @@ public class BoardTest {
 				if (board.getFieldHasBomb(x, y))
 					countedBombs++;
 		Assertions.assertEquals(bombs, countedBombs);
+	}
+
+	@Test
+	public void testConstructionFromSerializedState() {
+		String serializedState = "02:34\n"
+				//
+				+ "uUuo\n"
+				//
+				+ "Uuuo\n"
+				//
+				+ "Fooo\n";
+		Board board = new Board(serializedState);
+		Assertions.assertEquals(3, board.getHeight());
+		Assertions.assertEquals(4, board.getWidth());
+		Assertions.assertFalse(board.getFieldHasBomb(0, 0));
+		Assertions.assertTrue(board.getFieldHasBomb(0, 1));
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			board.openField(3, 0);
+		});
+		Assertions.assertEquals(Field.FLAGGED_WITH_BOMB, board.getFieldStatus(0, 2));
+		Assertions.assertEquals(2, board.getRemainingFlags());
+		Assertions.assertEquals(serializedState, board.getSerializedState());
 	}
 
 	@Test
@@ -111,7 +133,7 @@ public class BoardTest {
 							+ " and does not have a bomb. Here is what the board looks like:\n" + board.toString());
 
 		// Validate that the bomb was not opened automatically
-		Assertions.assertEquals(Field.UNOPENED, board.getFieldStatus(bombCoords[0], bombCoords[1]));
+		Assertions.assertEquals(Field.UNOPENED_WITH_BOMB, board.getFieldStatus(bombCoords[0], bombCoords[1]));
 
 	}
 
@@ -163,6 +185,40 @@ public class BoardTest {
 		Assertions.assertEquals(bombs, board.getRemainingFlags());
 		board.toggleFlag(5, 5);
 		Assertions.assertEquals(bombs - 1, board.getRemainingFlags());
+	}
+
+	@Test
+	public void testGetSerializedState() {
+		int height = 10;
+		int width = 10;
+		int bombs = 13;
+		Board board = new Board(height, width, bombs);
+		int[] bombCoords = getFieldFromBoard(board, true);
+		board.toggleFlag(bombCoords[0], bombCoords[1]);
+		int[] nonBombCoords = getFieldFromBoard(board, false);
+		board.openField(nonBombCoords[0], nonBombCoords[1]);
+		String result = board.getSerializedState();
+		String[] lines = result.split("\\r?\\n");
+
+		// Check that the first line has the time
+		Assertions.assertEquals("00:00", lines[0]);
+
+		// Check the dimensions of the output
+		Assertions.assertEquals(height + 1, lines.length);
+		for (int i = 1; i < lines.length; i++) {
+			Assertions.assertEquals(width, lines[i].length());
+		}
+
+		/**
+		 * Since we flagged 1 bomb, we expect there to be `bombs-1` occurences of the
+		 * UNOPENED_WITH_BOMB status
+		 */
+		Assertions.assertEquals(bombs - 1, result.chars().filter(c -> c == Field.UNOPENED_WITH_BOMB).count(), result);
+
+		/**
+		 * We also expect to find 1 flagged field
+		 */
+		Assertions.assertEquals(1, result.chars().filter(c -> c == Field.FLAGGED_WITH_BOMB).count(), result);
 	}
 
 }

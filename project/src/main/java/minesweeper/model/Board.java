@@ -1,12 +1,14 @@
 package minesweeper.model;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
-    private ArrayList<ArrayList<Field>> fields;
+    private List<List<Field>> fields;
     private Stopwatch stopwatch;
 
     // These constants describe x and y offsets for adjacent cells, respectively
@@ -25,6 +27,10 @@ public class Board {
     public static final String EASY = "Easy";
     public static final String NORMAL = "Normal";
     public static final String HARD = "Hard";
+
+    public enum Difficulty {
+        EASY, NORMAL, HARD
+    }
 
     private void createFields(int height, int width, int bombCount) {
         fields = new ArrayList<>();
@@ -48,16 +54,35 @@ public class Board {
         this.createFields(height, width, bombCount);
     }
 
-    public Board(String difficulty) {
+    public Board(Difficulty difficulty) {
         this.stopwatch = new Stopwatch();
-        if (difficulty.equals(Board.EASY))
+        if (difficulty == (Difficulty.EASY))
             this.createFields(8, 10, 10);
-        else if (difficulty.equals(Board.NORMAL))
+        else if (difficulty.equals(Difficulty.NORMAL))
             this.createFields(14, 18, 40);
-        else if (difficulty.equals(Board.HARD))
+        else if (difficulty.equals(Difficulty.HARD))
             this.createFields(17, 21, 80);
         else
             throw new IllegalArgumentException("Unexpected value: " + difficulty);
+    }
+
+    public Board(String serializedState) {
+        String[] lines = serializedState.split("\\r?\\n");
+        this.stopwatch = new Stopwatch();
+        String time = lines[0];
+        this.stopwatch.setTime(time);
+        this.fields = Stream.of(lines)
+                // Skip first line, because that's where the time is
+                .skip(1)
+                // Map each line to a list of Fields
+                .map(line -> line.chars()
+                        // Map each character in a line to a Field object
+                        .mapToObj(status -> new Field((char) status))
+                        // Collect the stream of Fields per row in a List
+                        .collect(Collectors.toList()))
+                // Collect the stream of rows in a List
+                .collect(Collectors.toList());
+
     }
 
     private Field getField(int x, int y) {
@@ -73,7 +98,6 @@ public class Board {
     }
 
     public char getFieldStatus(int x, int y) {
-        // TODO: Check that we actually need this method
         return getField(x, y).getStatus();
     }
 
@@ -142,7 +166,7 @@ public class Board {
 
     public char getStatus() {
         boolean someNotOpened = false;
-        for (ArrayList<Field> row : this.fields) {
+        for (List<Field> row : this.fields) {
             for (Field field : row) {
                 if (field.getHasBomb() && field.getIsOpened()) {
                     return LOST;
@@ -165,7 +189,7 @@ public class Board {
         }
         bld.append("\n");
         for (int y = 0; y < this.fields.size(); y++) {
-            ArrayList<Field> row = this.fields.get(y);
+            List<Field> row = this.fields.get(y);
             bld.append(Integer.toString(y) + ". ");
             for (int x = 0; x < row.size(); x++) {
                 bld.append(row.get(x).toString(countAdjacentBombs(x, y)) + " ");
@@ -183,11 +207,24 @@ public class Board {
         this.stopwatch.removeListener(stopwatchListener);
     }
 
+    public String getSerializedState() {
+        StringBuilder bld = new StringBuilder();
+        bld.append(this.stopwatch.getTime() + "\n");
+        for (Collection<Field> row : this.fields) {
+            for (Field field : row) {
+                bld.append(field.getStatus());
+            }
+            bld.append("\n");
+        }
+        return bld.toString();
+    }
+
     public static void main(String[] args) {
         Board board = new Board(10, 10, 10);
         Scanner scanner = new Scanner(System.in);
         while (board.getStatus() == PLAYING) {
             try {
+                System.out.println("Tid: " + board.stopwatch.getTime() + "\n");
                 System.out.println(board);
                 System.out.print("Hvilken rad vil du åpne? [0-" + Integer.toString(board.fields.size() - 1) + "] ");
                 int y = Integer.parseInt(scanner.nextLine());

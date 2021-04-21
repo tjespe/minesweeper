@@ -112,7 +112,7 @@ public class MinesweeperController implements StopwatchListener {
 		if (board != null) {
 			board.removeStopwatchListener(this);
 		}
-		board = new Board(dropDown.getValue());
+		board = new Board(Board.Difficulty.valueOf(dropDown.getValue()));
 		gridPane.setPrefWidth(board.getWidth() * 30);
 		gridPane.setPrefHeight(50 + board.getHeight() * 30);
 		drawBoard();
