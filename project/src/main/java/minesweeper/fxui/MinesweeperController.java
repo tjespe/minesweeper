@@ -1,8 +1,7 @@
 package minesweeper.fxui;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.io.IOException;
+import java.util.Collection;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -22,6 +21,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import minesweeper.model.Board;
+import minesweeper.model.BoardSaver;
 import minesweeper.model.DifficultyLevel;
 import minesweeper.model.Field;
 import minesweeper.model.StopwatchListener;
@@ -29,6 +29,8 @@ import minesweeper.model.StopwatchListener;
 public class MinesweeperController implements StopwatchListener {
 
 	private Board board;
+
+	private static BoardSaver boardSaver = new BoardSaver();
 
 	@FXML
 	private ChoiceBox<String> dropDown;
@@ -44,20 +46,33 @@ public class MinesweeperController implements StopwatchListener {
 	private GridPane gridPane;
 	@FXML
 	private Text numOfFlagsLeft;
+	@FXML
+	private Text saveStatus;
 
 	public void initialize() {
-		List<String> difficultyLabels = DifficultyLevel.getAll().stream().map(DifficultyLevel::getLabel)
-				.collect(Collectors.toList());
+		Collection<String> difficultyLabels = DifficultyLevel.getAllLabels();
 		dropDown.getItems().addAll(difficultyLabels.toArray(new String[difficultyLabels.size()]));
+		try {
+			board = boardSaver.readFromFile();
+			board.addStopwatchListener(this);
+			drawBoard();
+			DifficultyLevel level = board.getDifficulty();
+			dropDown.setValue(level != null ? level.getLabel() : "Unknown");
+			saveStatus.setText("Loaded saved game");
+		} catch (IOException exception) {
+			dropDown.setValue(DifficultyLevel.NORMAL.getLabel());
+			newGameWithSelectedLevel();
+			saveStatus.setText("Could not find a saved game");
+		}
 		dropDown.setOnAction(event -> {
-			applyDifficultyLevel();
+			newGameWithSelectedLevel();
 		});
-		dropDown.setValue(Board.NORMAL);
-		applyDifficultyLevel();
 
 	}
 
 	private void drawBoard() {
+		gridPane.setPrefWidth(board.getWidth() * 30);
+		gridPane.setPrefHeight(50 + board.getHeight() * 30);
 		boardParent.setLayoutX(500);
 		boardParent.getChildren().clear();
 		updateFlagCount();
@@ -74,27 +89,33 @@ public class MinesweeperController implements StopwatchListener {
 			// TODO gjøre kall på get time
 			System.out.println("You lost");
 		}
+
+		Scene scene = rootPane.getScene();
+		if (scene != null) {
+			Stage stage = (Stage) scene.getWindow();
+			stage.sizeToScene();
+		}
 	}
 
 	private void createBoardField(int row, int col) { // TODO divide into several methods
 		StackPane field = new StackPane();
 		field.setPrefWidth(30);
 		field.setPrefHeight(30);
-		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: "
-				+ getFieldStyle(board.getFieldStatus(row, col), row, col));
-		if (board.getFieldStatus(row, col) == Field.BOMB) {
+		char fieldStatus = board.getFieldStatus(row, col);
+		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: " + getFieldStyle(fieldStatus, row, col));
+		if (fieldStatus == Field.BOMB) {
 			Image imgBomb = new Image("/bomb.png");
 			ImageView imgBombView = new ImageView(imgBomb);
 			field.getChildren().add(imgBombView);
 			// TODO handle fail if image doesen't load and make folder for images
 		}
-		if (board.getFieldStatus(row, col) == Field.FLAGGED) {
+		if (fieldStatus == Field.FLAGGED || fieldStatus == Field.FLAGGED_WITH_BOMB) {
 			Image imgRedFlag = new Image("/flag.png");
 			ImageView imgRedFlagView = new ImageView(imgRedFlag);
 			field.getChildren().add(imgRedFlagView);
 		}
 
-		if (board.countAdjacentBombs(row, col) != 0 && board.getFieldStatus(row, col) == Field.OPENED) {
+		if (board.countAdjacentBombs(row, col) != 0 && fieldStatus == Field.OPENED) {
 			Text numOfAdjacentBombs = new Text();
 			int adjacentBombNum = board.countAdjacentBombs(row, col);
 			if (adjacentBombNum == 1) {
@@ -115,19 +136,12 @@ public class MinesweeperController implements StopwatchListener {
 	}
 
 	@FXML
-	public void applyDifficultyLevel() {
+	public void newGameWithSelectedLevel() {
 		if (board != null) {
 			board.removeStopwatchListener(this);
 		}
-		board = new Board(Board.Difficulty.valueOf(dropDown.getValue()));
-		gridPane.setPrefWidth(board.getWidth() * 30);
-		gridPane.setPrefHeight(50 + board.getHeight() * 30);
+		board = new Board(DifficultyLevel.getByLabel(dropDown.getValue()));
 		drawBoard();
-		Scene scene = rootPane.getScene();
-		if (scene != null) {
-			Stage stage = (Stage) scene.getWindow();
-			stage.sizeToScene();
-		}
 		board.addStopwatchListener(this);
 	}
 
@@ -146,12 +160,21 @@ public class MinesweeperController implements StopwatchListener {
 			board.toggleFlag(x - 1, y - 1);
 			drawBoard();
 		}
+		try {
+			boardSaver.writeToFile(board);
+			saveStatus.setText("Automatically saved");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			saveStatus.setText("Failed to save");
+		}
 
 	}
 
 	private String getFieldStyle(char fieldStatus, int x, int y) {
 		boolean dark = (x + y) % 2 == 0;
-		if (fieldStatus == Field.UNOPENED || fieldStatus == Field.FLAGGED) {
+		if (fieldStatus == Field.UNOPENED || fieldStatus == Field.UNOPENED_WITH_BOMB || fieldStatus == Field.FLAGGED
+				|| fieldStatus == Field.FLAGGED_WITH_BOMB) {
 			if (dark)
 				return "#66a103";
 			return "#73b504";

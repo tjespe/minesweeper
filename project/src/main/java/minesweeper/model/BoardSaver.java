@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Scanner;
 
-public class FileHandlerGame implements ReadAndWriteFile<Board> {
+public class BoardSaver implements ReadAndWriteFile<Board> {
 	private static final String FILE_PATH = System.getProperty("user.home") + "/game-state.mswp";
 
 	@Override
@@ -23,6 +23,7 @@ public class FileHandlerGame implements ReadAndWriteFile<Board> {
 	public void writeToFile(Board board) throws IOException {
 		if (board == null)
 			throw new IllegalStateException("No Board loaded");
+		System.out.println(FILE_PATH);
 		String data = board.getSerializedState();
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "utf-8"))) {
 			writer.write(data);

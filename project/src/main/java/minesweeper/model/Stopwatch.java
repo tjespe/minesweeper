@@ -29,14 +29,18 @@ public class Stopwatch {
 		stopwatchListeners.remove(stopwatchListener);
 	}
 
+	private void initializeTimeline() {
+		timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> sendTimeUpdate()));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
+	}
+
 	public void start() {
 		if (this.hasStarted())
 			throw new IllegalStateException("Stopwatch already started");
 		startTime = System.currentTimeMillis();
 		sendTimeUpdate();
-		timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> sendTimeUpdate()));
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
+		initializeTimeline();
 	}
 
 	public void setTime(String time) {
@@ -47,6 +51,8 @@ public class Stopwatch {
 		long seconds = Long.parseLong(secondsString);
 		long now = System.currentTimeMillis();
 		this.startTime = now - (minutes * 60 * 1000) - seconds * 1000;
+		sendTimeUpdate();
+		initializeTimeline();
 	}
 
 	public void stop() {
