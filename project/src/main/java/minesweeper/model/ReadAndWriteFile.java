@@ -1,6 +1,6 @@
 package minesweeper.model;
 
-public interface IReadAndWriteFile {
+public interface ReadAndWriteFile {
 	
 	void readFromFile();
 	
