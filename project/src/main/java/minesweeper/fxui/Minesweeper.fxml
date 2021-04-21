@@ -12,17 +12,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane"
-   xmlns="http://javafx.com/javafx/15.0.1"
-   xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
+<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
    <children>
       <GridPane fx:id="gridPane" prefHeight="455.0" prefWidth="558.0">
          <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="50" minHeight="50" vgrow="NEVER" />
+            <RowConstraints maxHeight="50.0" minHeight="50.0" vgrow="NEVER" />
             <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints />
          </rowConstraints>
          <children>
             <GridPane fx:id="toolbar" prefHeight="45.0" style="-fx-background-color: #eaeaea;">
@@ -62,7 +61,7 @@
                   </Text>
                   <ImageView id="flagInToolbar" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
 
-                     <Image url="/flag.png" />
+                     <Image url="file:/flag.png" />
 
                      <GridPane.margin>
                         <Insets left="12.0" />
@@ -81,7 +80,7 @@
                         <Insets left="25.0" />
                      </GridPane.margin>
                      <image>
-                        <Image url="/stopwatch.png" />
+                        <Image url="file:/stopwatch.png" />
                      </image>
                   </ImageView>
                </children>
@@ -89,17 +88,24 @@
             <GridPane fx:id="boardParent" onMouseClicked="#boardMouseClickedHandler" GridPane.rowIndex="1">
             </GridPane>
 
-            <GridPane GridPane.rowIndex="2">
+            <GridPane alignment="CENTER_RIGHT" GridPane.rowIndex="2">
                <padding>
-                  <Insets top="2.5" right="5" bottom="2.5" left="5"/>
+                  <Insets bottom="2.5" left="5" right="5" top="2.5" />
                </padding>
                <children>
-                  <Text GridPane.Halignment="RIGHT" fx:id="saveStatus" strokeWidth="0.0" text="Not saved" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                  <Text fx:id="saveStatus" strokeWidth="0.0" text="Not saved" textAlignment="RIGHT" GridPane.Halignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                      <font>
-                        <Font style="-fx-font-style: italic" name="Verdana" size="12.0" />
+                        <Font name="Verdana" size="12.0" style="-fx-font-style: italic" />
                      </font>
                   </Text>
                </children>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
             </GridPane>
          </children>
       </GridPane>
