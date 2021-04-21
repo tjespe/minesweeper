@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class Board {
     private ArrayList<ArrayList<Field>> fields;
+    private Stopwatch stopwatch;
 
     // These constants describe x and y offsets for adjacent cells, respectively
     private static final int[] ABOVE = { 0, -1, };
@@ -43,10 +44,12 @@ public class Board {
     }
 
     public Board(int height, int width, int bombCount) {
+        this.stopwatch = new Stopwatch();
         this.createFields(height, width, bombCount);
     }
 
     public Board(String difficulty) {
+        this.stopwatch = new Stopwatch();
         if (difficulty.equals(Board.EASY))
             this.createFields(8, 10, 10);
         else if (difficulty.equals(Board.NORMAL))
@@ -101,8 +104,12 @@ public class Board {
     }
 
     public void openField(int x, int y) {
+        if (!this.stopwatch.hasStarted())
+            this.stopwatch.start();
         Field field = this.getField(x, y);
         field.open();
+        if (this.getStatus() != PLAYING)
+            this.stopwatch.stop();
         if (field.getHasBomb())
             return;
         if (this.countAdjacentBombs(x, y) == 0) {
@@ -166,6 +173,14 @@ public class Board {
             bld.append("\n");
         }
         return bld.toString();
+    }
+
+    public void addStopwatchListener(StopwatchListener stopwatchListener) {
+        this.stopwatch.addListener(stopwatchListener);
+    }
+
+    public void removeStopwatchListener(StopwatchListener stopwatchListener) {
+        this.stopwatch.removeListener(stopwatchListener);
     }
 
     public static void main(String[] args) {
