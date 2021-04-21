@@ -82,7 +82,7 @@ public class MinesweeperController implements StopwatchListener {
 		updateFlagCount();
 		for (int col = 0; col < board.getWidth(); col++) {
 			for (int row = 0; row < board.getHeight(); row++) {
-				createBoardField(col, row);
+				drawBoardField(col, row);
 			}
 		}
 
@@ -101,7 +101,7 @@ public class MinesweeperController implements StopwatchListener {
 		}
 	}
 
-	private void createBoardField(int row, int col) { // TODO divide into several methods
+	private void drawBoardField(int row, int col) { // TODO divide into several methods
 		StackPane field = new StackPane();
 		field.setPrefWidth(30);
 		field.setPrefHeight(30);
