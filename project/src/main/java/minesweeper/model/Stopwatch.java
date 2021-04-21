@@ -3,6 +3,7 @@ package minesweeper.model;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 import javafx.util.Duration;
 import javafx.animation.Animation;
@@ -15,11 +16,13 @@ public class Stopwatch {
 	private Timeline timeline;
 	private Long startTime;
 	private Long stopTime;
-	private Collection<StopwatchListener> stopwatchListeners = new ArrayList<>();
+	private Collection<StopwatchListener> stopwatchListeners = new HashSet<>();
 
 	public void addListener(StopwatchListener stopwatchListener) {
-		if (stopwatchListeners.add(stopwatchListener))
+		if (!stopwatchListeners.contains(stopwatchListener)) {
+			stopwatchListeners.add(stopwatchListener);
 			stopwatchListener.timeChanged(getTime());
+		}
 	}
 
 	public void removeListener(StopwatchListener stopwatchListener) {
