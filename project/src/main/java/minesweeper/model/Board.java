@@ -3,6 +3,7 @@ package minesweeper.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Board {
     private ArrayList<ArrayList<Field>> fields;
@@ -23,11 +24,8 @@ public class Board {
     public static final String EASY = "Easy";
     public static final String NORMAL = "Normal";
     public static final String HARD = "Hard";
-    
-    private int flagCount;
 
     private void createFields(int height, int width, int bombCount) {
-    	this.flagCount = bombCount;
         fields = new ArrayList<>();
         int placedBombs = 0;
         for (int i = 0; i < height; i++) {
@@ -110,22 +108,25 @@ public class Board {
         if (this.countAdjacentBombs(x, y) == 0) {
             for (int[] coords : this.getAdjacentFields(x, y)) {
                 Field adjacent = this.getField(coords[0], coords[1]);
-                /*if (!adjacent.getHasBomb() && !adjacent.getIsOpened())
-                    this.openField(coords[0], coords[1]);*/
                 if (!adjacent.getHasBomb() && !adjacent.getIsOpened() && !adjacent.getIsFlagged())
                     this.openField(coords[0], coords[1]);
             }
         }
     }
-    
+
     public void toggleFlag(int x, int y) {
-    	if (getField(x, y).getIsFlagged()) flagCount ++;
-    	else flagCount --;
-    	getField(x,y).toggleFlag();
+        getField(x, y).toggleFlag();
     }
-    
-    public int getFlagCount() {
-    	return flagCount;
+
+    public int getBombCount() {
+        return Math.toIntExact(this.fields.stream().map(row -> row.stream().filter(Field::getHasBomb).count())
+                .collect(Collectors.summingLong(Long::longValue)));
+    }
+
+    public int getRemainingFlags() {
+        long placedFlags = (this.fields.stream().map(row -> row.stream().filter(Field::getIsFlagged).count())
+                .collect(Collectors.summingLong(Long::longValue)));
+        return Math.toIntExact(placedFlags) - this.getBombCount();
     }
 
     public static final char WON = 'w';
