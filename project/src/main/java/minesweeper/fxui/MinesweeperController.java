@@ -135,6 +135,9 @@ public class MinesweeperController {
 	@FXML
 	public void boardMouseClickedHandler(MouseEvent event) {
 		Node boardField = event.getPickResult().getIntersectedNode();
+		while (!(boardField instanceof StackPane)) {
+			boardField = boardField.getParent();
+		}
 		int x = GridPane.getColumnIndex(boardField).intValue();
 		int y = GridPane.getRowIndex(boardField).intValue();
 		if (event.getButton() == MouseButton.PRIMARY) {
