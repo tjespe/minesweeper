@@ -7,10 +7,7 @@ import java.net.URL;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -21,7 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -29,7 +25,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import minesweeper.model.Board;
 import minesweeper.model.Field;
 import minesweeper.model.Stopwatch;
@@ -39,10 +34,7 @@ public class MinesweeperController {
 	private Board board;
 	private Timeline timeline;
 	private Stopwatch stopwatch;
-	private boolean gameStarted = false; // for testing
-
-	@FXML
-	private URL location; // for testing,
+	private boolean gameStarted = false; // for testing, flytte til board
 
 	@FXML
 	private ChoiceBox<String> dropDown;
@@ -56,6 +48,8 @@ public class MinesweeperController {
 	private AnchorPane rootPane;
 	@FXML
 	private GridPane gridPane;
+	@FXML
+	private Text numOfFlagsLeft;
 
 	public void initialize() {
 		dropDown.getItems().addAll(Board.EASY, Board.NORMAL, Board.HARD);
@@ -64,11 +58,13 @@ public class MinesweeperController {
 		});
 		dropDown.setValue(Board.NORMAL);
 		applyDifficultyLevel();
+
 	}
 
 	private void drawBoard() {
 		boardParent.setLayoutX(500);
 		boardParent.getChildren().clear();
+		updateFlagCount();
 		for (int col = 0; col < board.getWidth(); col++) {
 			for (int row = 0; row < board.getHeight(); row++) {
 				createBoardField(col, row);
@@ -95,6 +91,11 @@ public class MinesweeperController {
 			ImageView imgBombView = new ImageView(imgBomb);
 			field.getChildren().add(imgBombView);
 			// TODO handle fail if image doesen't load and make folder for images
+		}
+		if (board.getFieldStatus(row, col) == Field.FLAGGED) {
+			Image imgRedFlag = new Image("/flag.png");
+			ImageView imgRedFlagView = new ImageView(imgRedFlag);
+			field.getChildren().add(imgRedFlagView);
 		}
 
 		if (board.countAdjacentBombs(row, col) != 0 && board.getFieldStatus(row, col) == Field.OPENED) {
@@ -144,10 +145,11 @@ public class MinesweeperController {
 				gameStarted = true;
 			}
 			drawBoard();
-		} /*
-			 * else if (event.getButton() == MouseButton.SECONDARY) {
-			 * board.getField(x-1,y-1).toggleFlag(); drawBoard(); }
-			 */
+		} else if (event.getButton() == MouseButton.SECONDARY) {
+			board.toggleFlag(x - 1, y - 1);
+			drawBoard();
+		}
+
 	}
 
 	private String getFieldStyle(char fieldStatus, int x, int y) {
@@ -177,6 +179,10 @@ public class MinesweeperController {
 	@FXML
 	public void highscoreHoverEffectExited() {
 		highscoreLinkText.setStyle("-fx-font-size: 12px;");
+	}
+
+	public void updateFlagCount() {
+		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
 	}
 
 	private void timer() { // TODO move this to stopwatch class (Stopwatch.java) bruke

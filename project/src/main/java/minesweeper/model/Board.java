@@ -3,6 +3,7 @@ package minesweeper.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Board {
     private ArrayList<ArrayList<Field>> fields;
@@ -107,10 +108,25 @@ public class Board {
         if (this.countAdjacentBombs(x, y) == 0) {
             for (int[] coords : this.getAdjacentFields(x, y)) {
                 Field adjacent = this.getField(coords[0], coords[1]);
-                if (!adjacent.getHasBomb() && !adjacent.getIsOpened())
+                if (!adjacent.getHasBomb() && !adjacent.getIsOpened() && !adjacent.getIsFlagged())
                     this.openField(coords[0], coords[1]);
             }
         }
+    }
+
+    public void toggleFlag(int x, int y) {
+        getField(x, y).toggleFlag();
+    }
+
+    public int getBombCount() {
+        return Math.toIntExact(this.fields.stream().map(row -> row.stream().filter(Field::getHasBomb).count())
+                .collect(Collectors.summingLong(Long::longValue)));
+    }
+
+    public int getRemainingFlags() {
+        long placedFlags = (this.fields.stream().map(row -> row.stream().filter(Field::getIsFlagged).count())
+                .collect(Collectors.summingLong(Long::longValue)));
+        return this.getBombCount() - Math.toIntExact(placedFlags);
     }
 
     public static final char WON = 'w';
