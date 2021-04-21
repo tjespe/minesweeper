@@ -89,12 +89,17 @@
             <GridPane fx:id="boardParent" onMouseClicked="#boardMouseClickedHandler" GridPane.rowIndex="1">
             </GridPane>
 
-            <GridPane GridPane.rowIndex="2" prefHeight="25.0">
-               <Text fx:id="saveStatus" strokeWidth="0.0" text="Not saved" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
-                  <font>
-                     <Font style="-fx-font-style: italic" name="Verdana" size="12.0" />
-                  </font>
-               </Text>
+            <GridPane GridPane.rowIndex="2">
+               <padding>
+                  <Insets top="2.5" right="5" bottom="2.5" left="5"/>
+               </padding>
+               <children>
+                  <Text GridPane.Halignment="RIGHT" fx:id="saveStatus" strokeWidth="0.0" text="Not saved" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                     <font>
+                        <Font style="-fx-font-style: italic" name="Verdana" size="12.0" />
+                     </font>
+                  </Text>
+               </children>
             </GridPane>
          </children>
       </GridPane>
