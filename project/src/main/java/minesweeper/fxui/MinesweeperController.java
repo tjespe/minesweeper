@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Collection;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
@@ -19,7 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import minesweeper.model.Board;
 import minesweeper.model.ReadAndWriteBoard;
 import minesweeper.model.DifficultyLevel;
@@ -187,9 +191,22 @@ public class MinesweeperController implements StopwatchListener {
 	}
 
 	@FXML
-	public void showHighscores() {
+	public void showHighscores() throws IOException {
 		System.out.println("highscores");
 		// TODO showHighscore display
+		
+		Parent highscoreScene = FXMLLoader.load(getClass().getResource("HighscoreList.fxml"));
+		Stage newHighscoreWindow = new Stage();
+		newHighscoreWindow.setTitle("Higscores");
+		newHighscoreWindow.setScene(new Scene(highscoreScene));
+
+		Scene rootScene = rootPane.getScene();
+		if (rootScene != null) {
+			Window rootStage = rootScene.getWindow();
+			newHighscoreWindow.initOwner(rootStage);;
+		}
+		newHighscoreWindow.initModality(Modality.WINDOW_MODAL);
+		newHighscoreWindow.show();
 	}
 
 	@Override
