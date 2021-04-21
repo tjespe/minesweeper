@@ -91,7 +91,7 @@ public class MinesweeperController {
 		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: "
 				+ getFieldStyle(board.getFieldStatus(row, col), row, col));
 		if (board.getFieldStatus(row, col) == Field.BOMB) {
-			Image imgBomb = new Image("/bomb1.png");
+			Image imgBomb = new Image("/bomb.png");
 			ImageView imgBombView = new ImageView(imgBomb);
 			field.getChildren().add(imgBombView);
 			// TODO handle fail if image doesen't load and make folder for images
