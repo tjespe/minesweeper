@@ -1,12 +1,5 @@
 package minesweeper.fxui;
 
-import javafx.util.Duration;
-import java.io.IOException;
-import java.net.URL;
-
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -26,13 +19,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import minesweeper.model.Board;
 import minesweeper.model.Field;
-import minesweeper.model.Stopwatch;
 import minesweeper.model.StopwatchListener;
 
 public class MinesweeperController implements StopwatchListener {
 
 	private Board board;
-	private Stopwatch stopwatch;
 
 	@FXML
 	private ChoiceBox<String> dropDown;
@@ -73,7 +64,7 @@ public class MinesweeperController implements StopwatchListener {
 		if (board.getStatus() == Board.WON) {
 			System.out.println("You won");
 		} else if (board.getStatus() == Board.LOST) {
-			//TODO gjøre kall på get time
+			// TODO gjøre kall på get time
 			System.out.println("You lost");
 		}
 	}
@@ -118,9 +109,8 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void applyDifficultyLevel() {
-		if (stopwatch != null) {
-			stopwatch.removeStopwatchListener(this);
-			stopwatch = null;
+		if (board != null) {
+			board.removeStopwatchListener(this);
 		}
 		board = new Board(dropDown.getValue());
 		gridPane.setPrefWidth(board.getWidth() * 30);
@@ -131,8 +121,7 @@ public class MinesweeperController implements StopwatchListener {
 			Stage stage = (Stage) scene.getWindow();
 			stage.sizeToScene();
 		}
-		stopwatch = new Stopwatch();
-		stopwatch.addStopwatchListener(this);
+		board.addStopwatchListener(this);
 	}
 
 	@FXML
@@ -145,9 +134,6 @@ public class MinesweeperController implements StopwatchListener {
 		int y = GridPane.getRowIndex(boardField).intValue();
 		if (event.getButton() == MouseButton.PRIMARY) {
 			board.openField(x - 1, y - 1);
-			if (!stopwatch.hasStarted()) { 
-				stopwatch.startStopwatch();
-			}
 			drawBoard();
 		} else if (event.getButton() == MouseButton.SECONDARY) {
 			board.toggleFlag(x - 1, y - 1);
@@ -174,13 +160,12 @@ public class MinesweeperController implements StopwatchListener {
 		System.out.println("highscores");
 		// TODO showHighscore display
 	}
-
   
 	@Override
 	public void timeChanged(String newTimeValue) {
-		timer.setText(newTimeValue);	
-  }
-  
+		timer.setText(newTimeValue);
+	}
+
 	public void updateFlagCount() {
 		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
 	}
