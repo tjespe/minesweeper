@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Scanner;
 
-public class FileHandlerHighscoreList implements ReadAndWriteFile<HighscoreList>{
+public class ReadAndWriteHighscoreList implements ReadAndWriteFile<HighscoreList>{
 
 	private static final String FILE_PATH = System.getProperty("user.home") + "/highscore-state.mswp";
 	

@@ -18,6 +18,13 @@ public class HighscoreList {
 		}
 	}
 	
+	public HighscoreList() {
+	}
+	
+	public List<Score> getAllhighScores() {
+		return highScores;
+	}
+
 	public String getSerializedHighscores() {
 		StringBuilder bld  = new StringBuilder(); 
 		for (Score score : highScores) {
