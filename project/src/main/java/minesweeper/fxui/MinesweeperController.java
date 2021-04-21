@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import minesweeper.model.Board;
 import minesweeper.model.ReadAndWriteBoard;
+import minesweeper.model.ReadAndWriteHighscoreList;
 import minesweeper.model.DifficultyLevel;
 import minesweeper.model.Field;
 import minesweeper.model.StopwatchListener;
@@ -35,6 +36,7 @@ public class MinesweeperController implements StopwatchListener {
 	private Board board;
 
 	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
+	private static ReadAndWriteHighscoreList highscoreSaver = new ReadAndWriteHighscoreList();
 
 	@FXML
 	private ChoiceBox<String> dropDown;
@@ -192,14 +194,10 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void showHighscores() throws IOException {
-		System.out.println("highscores");
-		// TODO showHighscore display
-		
 		Parent highscoreScene = FXMLLoader.load(getClass().getResource("HighscoreList.fxml"));
 		Stage newHighscoreWindow = new Stage();
 		newHighscoreWindow.setTitle("Higscores");
 		newHighscoreWindow.setScene(new Scene(highscoreScene));
-
 		Scene rootScene = rootPane.getScene();
 		if (rootScene != null) {
 			Window rootStage = rootScene.getWindow();

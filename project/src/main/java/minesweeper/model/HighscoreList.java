@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HighscoreList {
 
@@ -21,8 +22,8 @@ public class HighscoreList {
 	public HighscoreList() {
 	}
 	
-	public List<Score> getAllhighScores() {
-		return highScores;
+	public Collection<Score> getAllhighScores() {
+		return highScores.stream().collect(Collectors.toList());
 	}
 
 	public String getSerializedHighscores() {
@@ -43,5 +44,10 @@ public class HighscoreList {
 		Collections.sort(highScores);
 		bestScores = highScores.subList(0, 4);
 		return bestScores;
+	}
+	
+	@Override
+	public String toString() {
+		return ;
 	}
 }
