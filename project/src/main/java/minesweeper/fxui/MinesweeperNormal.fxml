@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,9 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane"
-   xmlns="http://javafx.com/javafx/15.0.1"
-   xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
+<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="minesweeper.fxui.MinesweeperController">
    <children>
       <GridPane fx:id="gridPane" prefHeight="455.0" prefWidth="558.0">
          <columnConstraints>
@@ -24,7 +23,7 @@
             <RowConstraints vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <GridPane fx:id="toolbar" prefHeight="45.0" style="-fx-background-color: grey;">
+            <GridPane fx:id="toolbar" prefHeight="45.0" style="-fx-background-color: #eaeaea;">
                <columnConstraints>
                   <ColumnConstraints hgrow="ALWAYS" />
                   <ColumnConstraints hgrow="ALWAYS" />
@@ -39,6 +38,9 @@
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </ChoiceBox>
                   <Text fx:id="numOfFlagsLeft" strokeType="OUTSIDE" strokeWidth="0.0" text="Flags left: " textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                      <GridPane.margin>
@@ -58,23 +60,26 @@
                   </Text>
                   <ImageView id="flagInToolbar" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
 
-                     <Image url="/flag.png" />
+                     <Image url="file:/flag.png" />
 
                      <GridPane.margin>
                         <Insets left="12.0" />
                      </GridPane.margin>
                   </ImageView>
-                  <Text fx:id="highscoreLinkText" onMouseClicked="#showHighscores" onMouseEntered="#highscoreHoverEffectEntered" onMouseExited="#highscoreHoverEffectExited" strokeType="OUTSIDE" strokeWidth="0.0" text="HIGHSCORES" GridPane.columnIndex="3" GridPane.halignment="CENTER">
+                  <Text fx:id="highscoreLinkText" onMouseClicked="#showHighscores" strokeType="OUTSIDE" strokeWidth="0.0" text="HIGHSCORES" GridPane.columnIndex="3" GridPane.halignment="CENTER">
                      <font>
                         <Font name="Verdana Bold" size="12.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Text>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                      <GridPane.margin>
                         <Insets left="25.0" />
                      </GridPane.margin>
                      <image>
-                        <Image url="/stopwatch.png" />
+                        <Image url="file:/stopwatch.png" />
                      </image>
                   </ImageView>
                </children>
