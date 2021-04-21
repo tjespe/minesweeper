@@ -3,7 +3,6 @@ package minesweeper.model;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,7 +10,6 @@ import java.util.stream.Stream;
 public class Board {
     private List<List<Field>> fields;
     private Stopwatch stopwatch;
-    private Collection<BoardListener> changeListeners = new HashSet<>();
 
     // These constants describe x and y offsets for adjacent cells, respectively
     private static final int[] ABOVE = { 0, -1, };
@@ -128,7 +126,6 @@ public class Board {
             this.stopwatch.start();
         Field field = this.getField(x, y);
         field.open();
-        this.fireStateChanged();
         if (this.getStatus() != PLAYING)
             this.stopwatch.stop();
         if (field.getHasBomb())
@@ -214,23 +211,6 @@ public class Board {
             bld.append("\n");
         }
         return bld.toString();
-    }
-
-    public void addBoardListener(BoardListener listener) {
-        if (!this.changeListeners.contains(listener)) {
-            this.changeListeners.add(listener);
-            listener.boardChanged(this);
-        }
-    }
-
-    public void removeBoardListener(BoardListener listener) {
-        this.changeListeners.remove(listener);
-    }
-
-    public void fireStateChanged() {
-        for (BoardListener listener : this.changeListeners) {
-            listener.boardChanged(this);
-        }
     }
 
     public static void main(String[] args) {
