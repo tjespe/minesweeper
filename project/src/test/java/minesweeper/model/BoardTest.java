@@ -221,4 +221,12 @@ public class BoardTest extends TestWithJavaFXTimeline {
 		Assertions.assertEquals(1, result.chars().filter(c -> c == Field.FLAGGED_WITH_BOMB).count(), result);
 	}
 
+	@Test
+	public void testGetDifficulty() {
+		for (DifficultyLevel level : DifficultyLevel.getAll()) {
+			Board board = new Board(level);
+			Assertions.assertEquals(level, board.getDifficulty());
+		}
+	}
+
 }
