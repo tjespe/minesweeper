@@ -9,7 +9,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -95,8 +97,13 @@ public class MinesweeperController implements StopwatchListener {
 				e.printStackTrace();
 			}
 		} else if (board.getStatus() == Board.LOST) {
-			// TODO gjøre kall på get time
-			System.out.println("You lost");
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("You lost!");
+			alert.setHeaderText("You lost!");
+			alert.setContentText("Click OK to restart!");
+			alert.showAndWait();
+			this.newGameWithSelectedLevel();
+			this.drawBoard();
 		}
 
 		Scene scene = rootPane.getScene();
@@ -215,7 +222,8 @@ public class MinesweeperController implements StopwatchListener {
 	public void showGameWonModal() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
 		GameWonController childController = loader.getController();
-		childController.setParentController(this);
+		if (childController != null)
+			childController.setParentController(this);
 		Parent gameWonScene = loader.load();
 		Stage newWindow = new Stage();
 		newWindow.setTitle("You won!");
