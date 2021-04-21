@@ -10,7 +10,6 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
@@ -28,13 +27,12 @@ import javafx.stage.Stage;
 import minesweeper.model.Board;
 import minesweeper.model.Field;
 import minesweeper.model.Stopwatch;
+import minesweeper.model.StopwatchListener;
 
-public class MinesweeperController {
+public class MinesweeperController implements StopwatchListener {
 
 	private Board board;
-	private Timeline timeline;
 	private Stopwatch stopwatch;
-	private boolean gameStarted = false; // for testing, flytte til board
 
 	@FXML
 	private ChoiceBox<String> dropDown;
@@ -75,7 +73,7 @@ public class MinesweeperController {
 		if (board.getStatus() == Board.WON) {
 			System.out.println("You won");
 		} else if (board.getStatus() == Board.LOST) {
-			timeline.stop();
+			//TODO gjøre kall på get time
 			System.out.println("You lost");
 		}
 	}
@@ -120,6 +118,10 @@ public class MinesweeperController {
 
 	@FXML
 	public void applyDifficultyLevel() {
+		if (stopwatch != null) {
+			stopwatch.removeStopwatchListener(this);
+			stopwatch = null;
+		}
 		board = new Board(dropDown.getValue());
 		gridPane.setPrefWidth(board.getWidth() * 30);
 		gridPane.setPrefHeight(50 + board.getHeight() * 30);
@@ -129,7 +131,8 @@ public class MinesweeperController {
 			Stage stage = (Stage) scene.getWindow();
 			stage.sizeToScene();
 		}
-
+		stopwatch = new Stopwatch();
+		stopwatch.addStopwatchListener(this);
 	}
 
 	@FXML
@@ -142,10 +145,8 @@ public class MinesweeperController {
 		int y = GridPane.getRowIndex(boardField).intValue();
 		if (event.getButton() == MouseButton.PRIMARY) {
 			board.openField(x - 1, y - 1);
-			if (!gameStarted) { // TODO find better solution
-				stopwatch = new Stopwatch();
-				timer();
-				gameStarted = true;
+			if (!stopwatch.hasStarted()) { 
+				stopwatch.startStopwatch();
 			}
 			drawBoard();
 		} else if (event.getButton() == MouseButton.SECONDARY) {
@@ -183,17 +184,13 @@ public class MinesweeperController {
 	public void highscoreHoverEffectExited() {
 		highscoreLinkText.setStyle("-fx-font-size: 12px;");
 	}
-
+  
+	@Override
+	public void timeChanged(String newTimeValue) {
+		timer.setText(newTimeValue);	
+  }
+  
 	public void updateFlagCount() {
 		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
-	}
-
-	private void timer() { // TODO move this to stopwatch class (Stopwatch.java) bruke
-							// observeringteksnikken? propertyChangedListener så den slipper å kaøøle hele
-							// tiden, abstact klasse??
-		timeline = new Timeline(
-				new KeyFrame(Duration.millis(1000), actionEvent -> timer.setText(stopwatch.updateTime())));
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
 	}
 }
