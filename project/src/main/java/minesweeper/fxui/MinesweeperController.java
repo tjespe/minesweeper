@@ -175,10 +175,6 @@ public class MinesweeperController implements StopwatchListener {
 		// TODO showHighscore display
 	}
 
-	/*@FXML
-	public void highscoreHoverEffect() {
-		highscoreLinkText.setStyle("-fx-cursor: hand;");
-	}*/
   
 	@Override
 	public void timeChanged(String newTimeValue) {
