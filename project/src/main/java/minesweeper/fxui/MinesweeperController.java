@@ -231,10 +231,9 @@ public class MinesweeperController implements StopwatchListener {
 	public void showHighscores() throws IOException {
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("HighscoreList.fxml"));
-		HighscoreListController highscoreListController = loader.getController();
-		if (highscoreListController != null)
-			highscoreListController.setParentController(this);
 		Parent highscoreListScene = loader.load();
+		HighscoreListController highscoreListController = loader.getController();
+		highscoreListController.setParentController(this);
 		Stage newWindow = new Stage();
 		newWindow.setTitle("Higscores");
 		newWindow.setScene(new Scene(highscoreListScene));

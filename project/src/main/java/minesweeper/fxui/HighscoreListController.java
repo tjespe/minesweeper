@@ -13,6 +13,7 @@ public class HighscoreListController {
 
     public void setParentController(MinesweeperController parentController) {
         this.parentController = parentController;
+        this.initialize();
     }
 	
     public void initialize() {
@@ -20,6 +21,8 @@ public class HighscoreListController {
 	}
 	
 	private void loadHighscoreList() {
+		if(parentController == null) return;
+		System.out.println(parentController.highscores.getBestScores());
 		
 		highscores.getItems().add("Item 1");
 		highscores.getItems().add("Item 2");
