@@ -1,9 +1,11 @@
 package minesweeper.model;
 
-public interface ReadAndWriteFile {
-	
-	void readFromFile();
-	
-	void writeToFile();
+import java.io.IOException;
+
+public interface ReadAndWriteFile<T> {
+
+	public T readFromFile() throws IOException;
+
+	public void writeToFile(T obj) throws IOException;
 
 }

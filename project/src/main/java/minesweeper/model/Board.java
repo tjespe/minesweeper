@@ -3,6 +3,7 @@ package minesweeper.model;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 public class Board {
     private List<List<Field>> fields;
     private Stopwatch stopwatch;
+    private Collection<BoardListener> changeListeners = new HashSet<>();
 
     // These constants describe x and y offsets for adjacent cells, respectively
     private static final int[] ABOVE = { 0, -1, };
@@ -23,14 +25,6 @@ public class Board {
 
     private static final int[][] ADJACENCY_OFFSETS = { ABOVE, BELOW, LEFT, RIGHT, LEFTABOVE, RIGHTABOVE, RIGHTBELOW,
             LEFTBELOW };
-
-    public static final String EASY = "Easy";
-    public static final String NORMAL = "Normal";
-    public static final String HARD = "Hard";
-
-    public enum Difficulty {
-        EASY, NORMAL, HARD
-    }
 
     private void createFields(int height, int width, int bombCount) {
         fields = new ArrayList<>();
@@ -54,13 +48,13 @@ public class Board {
         this.createFields(height, width, bombCount);
     }
 
-    public Board(Difficulty difficulty) {
+    public Board(DifficultyLevel difficulty) {
         this.stopwatch = new Stopwatch();
-        if (difficulty == (Difficulty.EASY))
+        if (difficulty == (DifficultyLevel.EASY))
             this.createFields(8, 10, 10);
-        else if (difficulty.equals(Difficulty.NORMAL))
+        else if (difficulty.equals(DifficultyLevel.NORMAL))
             this.createFields(14, 18, 40);
-        else if (difficulty.equals(Difficulty.HARD))
+        else if (difficulty.equals(DifficultyLevel.HARD))
             this.createFields(17, 21, 80);
         else
             throw new IllegalArgumentException("Unexpected value: " + difficulty);
@@ -132,6 +126,7 @@ public class Board {
             this.stopwatch.start();
         Field field = this.getField(x, y);
         field.open();
+        this.fireStateChanged();
         if (this.getStatus() != PLAYING)
             this.stopwatch.stop();
         if (field.getHasBomb())
@@ -217,6 +212,23 @@ public class Board {
             bld.append("\n");
         }
         return bld.toString();
+    }
+
+    public void addBoardListener(BoardListener listener) {
+        if (!this.changeListeners.contains(listener)) {
+            this.changeListeners.add(listener);
+            listener.boardChanged(this);
+        }
+    }
+
+    public void removeBoardListener(BoardListener listener) {
+        this.changeListeners.remove(listener);
+    }
+
+    public void fireStateChanged() {
+        for (BoardListener listener : this.changeListeners) {
+            listener.boardChanged(this);
+        }
     }
 
     public static void main(String[] args) {

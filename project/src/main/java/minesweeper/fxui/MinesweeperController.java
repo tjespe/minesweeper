@@ -1,5 +1,9 @@
 package minesweeper.fxui;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,6 +22,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import minesweeper.model.Board;
+import minesweeper.model.DifficultyLevel;
 import minesweeper.model.Field;
 import minesweeper.model.StopwatchListener;
 
@@ -41,7 +46,9 @@ public class MinesweeperController implements StopwatchListener {
 	private Text numOfFlagsLeft;
 
 	public void initialize() {
-		dropDown.getItems().addAll(Board.EASY, Board.NORMAL, Board.HARD);
+		List<String> difficultyLabels = DifficultyLevel.getAll().stream().map(DifficultyLevel::getLabel)
+				.collect(Collectors.toList());
+		dropDown.getItems().addAll(difficultyLabels.toArray(new String[difficultyLabels.size()]));
 		dropDown.setOnAction(event -> {
 			applyDifficultyLevel();
 		});
@@ -160,7 +167,7 @@ public class MinesweeperController implements StopwatchListener {
 		System.out.println("highscores");
 		// TODO showHighscore display
 	}
-  
+
 	@Override
 	public void timeChanged(String newTimeValue) {
 		timer.setText(newTimeValue);
