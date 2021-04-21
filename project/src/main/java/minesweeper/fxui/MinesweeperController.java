@@ -58,7 +58,7 @@ public class MinesweeperController {
 		});
 		dropDown.setValue(Board.NORMAL);
 		applyDifficultyLevel();
-		
+
 	}
 
 	private void drawBoard() {
@@ -93,7 +93,7 @@ public class MinesweeperController {
 			// TODO handle fail if image doesen't load and make folder for images
 		}
 		if (board.getFieldStatus(row, col) == Field.FLAGGED) {
-			Image imgRedFlag = new Image("/redFlag1.png");
+			Image imgRedFlag = new Image("/flag.png");
 			ImageView imgRedFlagView = new ImageView(imgRedFlag);
 			field.getChildren().add(imgRedFlagView);
 		}
@@ -146,10 +146,10 @@ public class MinesweeperController {
 			}
 			drawBoard();
 		} else if (event.getButton() == MouseButton.SECONDARY) {
-			board.toggleFlag(x-1,y-1); 
-			drawBoard(); 
+			board.toggleFlag(x - 1, y - 1);
+			drawBoard();
 		}
-			 
+
 	}
 
 	private String getFieldStyle(char fieldStatus, int x, int y) {
@@ -180,9 +180,9 @@ public class MinesweeperController {
 	public void highscoreHoverEffectExited() {
 		highscoreLinkText.setStyle("-fx-font-size: 12px;");
 	}
-	
+
 	public void updateFlagCount() {
-		numOfFlagsLeft.setText(String.valueOf(board.getFlagCount()));
+		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
 	}
 
 	private void timer() { // TODO move this to stopwatch class (Stopwatch.java) bruke

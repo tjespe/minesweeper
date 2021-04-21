@@ -126,7 +126,7 @@ public class Board {
     public int getRemainingFlags() {
         long placedFlags = (this.fields.stream().map(row -> row.stream().filter(Field::getIsFlagged).count())
                 .collect(Collectors.summingLong(Long::longValue)));
-        return Math.toIntExact(placedFlags) - this.getBombCount();
+        return this.getBombCount() - Math.toIntExact(placedFlags);
     }
 
     public static final char WON = 'w';
