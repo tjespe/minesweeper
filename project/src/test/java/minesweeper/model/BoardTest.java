@@ -172,6 +172,27 @@ public class BoardTest extends TestWithJavaFXTimeline {
 	}
 
 	@Test
+	public void testBombsAutoOpen() {
+		// Create a 2x2 board with 3 bombs
+		Board board = new Board(2, 2, 3);
+
+		// Check that user has not lost yet
+		Assertions.assertEquals(Board.PLAYING, board.getStatus());
+
+		// Find the field without a bomb
+		int[] nonBombCoords = getFieldFromBoard(board, false);
+
+		// Open a field with a bomb
+		int[] bombCoords = getFieldFromBoard(board, true);
+		board.openField(bombCoords[0], bombCoords[1]);
+
+		// Check that all the bomb fields were automatically opened
+		for (int[] coords : board.getAdjacentFields(nonBombCoords[0], nonBombCoords[1])) {
+			Assertions.assertEquals(Field.BOMB, board.getFieldStatus(coords[0], coords[1]));
+		}
+	}
+
+	@Test
 	public void testGetBombCount() {
 		int expectedBombs = 17;
 		Board board = new Board(20, 20, expectedBombs);

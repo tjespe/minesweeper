@@ -121,6 +121,14 @@ public class Board {
         return total;
     }
 
+    private void openAllBombs() {
+        for (Collection<Field> row : this.fields)
+            for (Field cell : row)
+                if (cell.getHasBomb() && !cell.getIsOpened())
+                    cell.open();
+
+    }
+
     public void openField(int x, int y) {
         if (!this.stopwatch.hasStarted())
             this.stopwatch.start();
@@ -128,8 +136,10 @@ public class Board {
         field.open();
         if (this.getStatus() != PLAYING)
             this.stopwatch.stop();
-        if (field.getHasBomb())
+        if (field.getHasBomb()) {
+            this.openAllBombs();
             return;
+        }
         if (this.countAdjacentBombs(x, y) == 0) {
             for (int[] coords : this.getAdjacentFields(x, y)) {
                 Field adjacent = this.getField(coords[0], coords[1]);

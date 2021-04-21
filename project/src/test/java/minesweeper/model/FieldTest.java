@@ -31,6 +31,10 @@ public class FieldTest {
 		Assertions.assertEquals(true, bombField.getIsFlagged());
 		bombField.toggleFlag();
 		Assertions.assertEquals(false, bombField.getIsFlagged());
+		nonBombField.open();
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			nonBombField.toggleFlag();
+		});
 	}
 
 	@Test
