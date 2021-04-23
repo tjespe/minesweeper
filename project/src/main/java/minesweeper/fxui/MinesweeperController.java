@@ -68,7 +68,6 @@ public class MinesweeperController implements StopwatchListener {
 			drawBoard();
 			DifficultyLevel level = board.getDifficulty();
 			dropDown.setValue(level != null ? level.getLabel() : "Unknown");
-			this.initializeHighscores();
 			saveStatus.setText("Loaded saved game");
 		} catch (IOException exception) {
 			dropDown.setValue(DifficultyLevel.NORMAL.getLabel());
@@ -78,9 +77,6 @@ public class MinesweeperController implements StopwatchListener {
 		dropDown.setOnAction(event -> {
 			newGameWithSelectedLevel();
 		});
-	}
-
-	public void initializeHighscores() {
 		try {
 			// TODO: Make sure to read correct file based on difficulty level
 			highscores = highscoreSaver.readFromFile();
@@ -186,7 +182,6 @@ public class MinesweeperController implements StopwatchListener {
 		if (level == null)
 			level = DifficultyLevel.NORMAL;
 		board = new Board(level);
-		this.initializeHighscores();
 		drawBoard();
 		board.addStopwatchListener(this);
 		saveStatus.setText("Not saved");
@@ -232,20 +227,21 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void showHighscores() throws IOException {
-		System.out.println("highscores");
 
-		Parent highscoreScene = FXMLLoader.load(getClass().getResource("HighscoreList.fxml"));
-		Stage newHighscoreWindow = new Stage();
-		newHighscoreWindow.setTitle("Higscores");
-		newHighscoreWindow.setScene(new Scene(highscoreScene));
-
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("HighscoreList.fxml"));
+		Parent highscoreListScene = loader.load();
+		HighscoreListController highscoreListController = loader.getController();
+		highscoreListController.setParentController(this);
+		Stage newWindow = new Stage();
+		newWindow.setTitle("Higscores");
+		newWindow.setScene(new Scene(highscoreListScene));
 		Scene rootScene = rootPane.getScene();
 		if (rootScene != null) {
 			Window rootStage = rootScene.getWindow();
-			newHighscoreWindow.initOwner(rootStage);
+			newWindow.initOwner(rootStage);
 		}
-		newHighscoreWindow.initModality(Modality.WINDOW_MODAL);
-		newHighscoreWindow.show();
+		newWindow.initModality(Modality.WINDOW_MODAL);
+		newWindow.show();
 	}
 
 	public void showGameWonModal() throws IOException {
@@ -274,6 +270,10 @@ public class MinesweeperController implements StopwatchListener {
 
 	public String getCurrentTime() {
 		return timer.getText();
+	}
+
+	public DifficultyLevel getCurrentDifficultyLevel() {
+		return DifficultyLevel.getByLabel(dropDown.getValue());
 	}
 
 	public void updateFlagCount() {
