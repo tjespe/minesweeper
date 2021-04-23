@@ -12,7 +12,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane fx:id="rootPane"
+   xmlns:fx="http://javafx.com/fxml/1"
    xmlns="http://javafx.com/javafx/15.0.1" fx:controller="minesweeper.fxui.GameWonController">
    <children>
       <GridPane prefHeight="100.0" prefWidth="250.0">
