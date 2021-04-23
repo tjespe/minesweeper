@@ -41,7 +41,7 @@ public class MinesweeperController implements StopwatchListener {
 
 	private static ReadAndWriteHighscoreList highscoreSaver = new ReadAndWriteHighscoreList();
 	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
-	
+
 	@FXML
 	private ChoiceBox<String> dropDown;
 	@FXML
@@ -68,7 +68,6 @@ public class MinesweeperController implements StopwatchListener {
 			drawBoard();
 			DifficultyLevel level = board.getDifficulty();
 			dropDown.setValue(level != null ? level.getLabel() : "Unknown");
-			this.initializeHighscores();
 			saveStatus.setText("Loaded saved game");
 		} catch (IOException exception) {
 			dropDown.setValue(DifficultyLevel.NORMAL.getLabel());
@@ -78,9 +77,6 @@ public class MinesweeperController implements StopwatchListener {
 		dropDown.setOnAction(event -> {
 			newGameWithSelectedLevel();
 		});
-	}
-
-	public void initializeHighscores() {
 		try {
 			// TODO: Make sure to read correct file based on difficulty level
 			highscores = highscoreSaver.readFromFile();
@@ -186,7 +182,6 @@ public class MinesweeperController implements StopwatchListener {
 		if (level == null)
 			level = DifficultyLevel.NORMAL;
 		board = new Board(level);
-		this.initializeHighscores();
 		drawBoard();
 		board.addStopwatchListener(this);
 		saveStatus.setText("Not saved");
@@ -275,6 +270,10 @@ public class MinesweeperController implements StopwatchListener {
 
 	public String getCurrentTime() {
 		return timer.getText();
+	}
+
+	public DifficultyLevel getCurrentDifficultyLevel() {
+		return DifficultyLevel.getByLabel(dropDown.getValue());
 	}
 
 	public void updateFlagCount() {
