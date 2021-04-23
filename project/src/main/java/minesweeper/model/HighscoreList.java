@@ -14,7 +14,7 @@ public class HighscoreList {
 		for (String line : lines) {
 			String name = line.split(",")[0];
 			String time = line.split(",")[1];
-			String levelLabel = line.split(",")[1];
+			String levelLabel = line.split(",")[2];
 			DifficultyLevel level = DifficultyLevel.getByLabel(levelLabel);
 			highScores.add(new Score(name, time, level));
 		}
