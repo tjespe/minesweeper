@@ -1,7 +1,11 @@
 package minesweeper.fxui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import minesweeper.model.Score;
 
 public class HighscoreListController {
 
@@ -23,9 +27,9 @@ public class HighscoreListController {
 		if (parentController == null)
 			return;
 		System.out.println(parentController.highscores.getBestScores(parentController.getCurrentDifficultyLevel()));
-
-		highscores.getItems().add("Item 1");
-		highscores.getItems().add("Item 2");
-		highscores.getItems().add("Item 3");
+		Collection<Score> topFive = new ArrayList<>(parentController.highscores.getBestScores(parentController.getCurrentDifficultyLevel()));
+		for (Score score : topFive) {
+			highscores.getItems().add(String.format("%-37s %10s", score.getName(), score.getTime()));
+		}
 	}
 }

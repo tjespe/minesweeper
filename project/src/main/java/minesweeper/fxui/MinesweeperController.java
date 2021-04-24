@@ -148,7 +148,7 @@ public class MinesweeperController implements StopwatchListener {
 				ImageView imgRedFlagView = new ImageView(imgRedFlag);
 				field.getChildren().add(imgRedFlagView);
 			} catch (Exception e) {
-				Text fallback = new Text("💣");
+				Text fallback = new Text("⛳");
 				field.getChildren().add(fallback);
 			}
 		}
