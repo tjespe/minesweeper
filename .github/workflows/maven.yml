@@ -24,4 +24,5 @@ jobs:
         run: mvn --batch-mode deploy --file pom_with_maven_fx.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_OPTS: "--enable-preview"
         working-directory: project
