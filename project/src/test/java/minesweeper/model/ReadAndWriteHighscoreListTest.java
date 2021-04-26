@@ -51,7 +51,7 @@ public class ReadAndWriteHighscoreListTest {
 		highscoreList = new HighscoreList();
 		new ReadAndWriteHighscoreList().writeToFile(highscoreList);
 		byte[] game = null;
-		game = Files.readAllBytes(Path.of(System.getProperty("user.home") + "/game-state.mswp"));
+		game = Files.readAllBytes(Path.of(System.getProperty("user.home") + "/highscore-state.mswp"));
 		Assertions.assertNotNull(game);
 	}
 
