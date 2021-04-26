@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: "15"
-          java-package: "jdk+fx"
+          java-package: "jre+fx"
           distribution: "adopt"
       - name: Publish to GitHub Packages
         run: mvn --batch-mode deploy --file pom_with_maven_fx.xml
