@@ -257,6 +257,7 @@ public class MinesweeperController implements StopwatchListener {
 			Window rootStage = rootScene.getWindow();
 			newWindow.initOwner(rootStage);
 		}
+		newWindow.setResizable(false);
 		newWindow.initModality(Modality.WINDOW_MODAL);
 		newWindow.show();
 	}

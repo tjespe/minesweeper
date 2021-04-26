@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class BoardTest extends TestWithJavaFXTimeline {
+public class BoardTest {
 
 	/**
 	 * Helper method for checking that a list of coordinates contain the expected
@@ -113,8 +113,11 @@ public class BoardTest extends TestWithJavaFXTimeline {
 		// Find the bomb
 		int[] bombCoords = getFieldFromBoard(board, true);
 
-		// Get an adjacent field of the bomb field
-		int[] adjacCoords = board.getAdjacentFields(bombCoords[0], bombCoords[1]).iterator().next();
+		// Get an adjacent field of the bomb field that is not board corner
+		int[] adjacCoords = board
+				.getAdjacentFields(bombCoords[0], bombCoords[1]).stream().filter(coords -> coords[0] != 0
+						&& coords[1] != 0 && coords[0] < board.getWidth() - 1 && coords[1] < board.getHeight())
+				.findFirst().orElseThrow();
 
 		// Get an adjacent field of the adjacent field that is not adjacent to the bomb
 		int[] fieldToOpen = board.getAdjacentFields(adjacCoords[0], adjacCoords[1]).stream()
@@ -134,7 +137,6 @@ public class BoardTest extends TestWithJavaFXTimeline {
 
 		// Validate that the bomb was not opened automatically
 		Assertions.assertEquals(Field.UNOPENED_WITH_BOMB, board.getFieldStatus(bombCoords[0], bombCoords[1]));
-
 	}
 
 	@Test

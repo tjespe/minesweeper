@@ -21,7 +21,7 @@ class MockedListener implements StopwatchListener {
 
 }
 
-public class StopwatchTest extends TestWithJavaFXTimeline {
+public class StopwatchTest {
 
     @Test
     public void addAndRemoveListenerTest() {
