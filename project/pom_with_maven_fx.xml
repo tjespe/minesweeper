@@ -72,7 +72,7 @@
                     <options>
                         <option>--enable-preview</option>
                     </options>
-                    <mainClass>project/minesweeper.fxui.MinesweeperApp</mainClass>
+                    <mainClass>project/minesweeper.fxui.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
