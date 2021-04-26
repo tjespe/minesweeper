@@ -25,6 +25,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import minesweeper.model.Board;
 import minesweeper.model.ReadAndWriteBoard;
@@ -226,7 +227,6 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void showHighscores() throws IOException {
-
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("HighscoreList.fxml"));
 		Parent highscoreListScene = loader.load();
 		HighscoreListController highscoreListController = loader.getController();
@@ -239,10 +239,11 @@ public class MinesweeperController implements StopwatchListener {
 			Window rootStage = rootScene.getWindow();
 			newWindow.initOwner(rootStage);
 		}
+		newWindow.setResizable(false);
 		newWindow.initModality(Modality.WINDOW_MODAL);
 		newWindow.show();
 	}
-	
+
 	public void saveHighscores() {
 		try {
 			highscoreSaver.writeToFile(highscores);
@@ -260,6 +261,8 @@ public class MinesweeperController implements StopwatchListener {
 		Stage newWindow = new Stage();
 		newWindow.setTitle("You won!");
 		newWindow.setScene(new Scene(gameWonScene));
+		newWindow.setResizable(false);
+		newWindow.initStyle(StageStyle.UNDECORATED);
 
 		Scene rootScene = rootPane.getScene();
 		if (rootScene != null) {
@@ -285,5 +288,19 @@ public class MinesweeperController implements StopwatchListener {
 
 	public void updateFlagCount() {
 		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
+	}
+
+	@Override
+	public void timeIsUp() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("You lost!");
+		alert.setHeaderText("Time is up!");
+		alert.setContentText(
+				"You have spent more than 1 hour, which is the maximum time allowed. Click OK to restart.");
+		alert.setOnHidden(evt -> {
+			this.newGameWithSelectedLevel();
+			this.drawBoard();
+		});
+		alert.show();
 	}
 }

@@ -66,12 +66,20 @@ public class Stopwatch {
 		return startTime != null;
 	}
 
+	private long getMillis() {
+		return stopTime == null ? System.currentTimeMillis() - startTime : stopTime - startTime;
+	}
+
+	private boolean isOutOfTime() {
+		return this.getMillis() / 1000 >= 3600;
+	}
+
 	public String getTime() {
 		if (!hasStarted())
 			return DECIMAL_FORMAT.format(0) + ":" + DECIMAL_FORMAT.format(0);
-		long currentTime = stopTime == null ? System.currentTimeMillis() - startTime : stopTime - startTime;
+		long currentTime = this.getMillis();
 
-		if (currentTime / 1000 >= 3600) {
+		if (this.isOutOfTime()) {
 			throw new IllegalStateException("Out of time");
 		}
 
@@ -83,7 +91,13 @@ public class Stopwatch {
 	}
 
 	protected void sendTimeUpdate() {
-		for (StopwatchListener listener : this.stopwatchListeners)
-			listener.timeChanged(this.getTime());
+		for (StopwatchListener listener : this.stopwatchListeners) {
+			if (this.isOutOfTime()) {
+				listener.timeIsUp();
+				this.stop();
+			} else {
+				listener.timeChanged(this.getTime());
+			}
+		}
 	}
 }
