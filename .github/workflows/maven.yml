@@ -24,3 +24,4 @@ jobs:
         run: mvn --batch-mode deploy --file pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: project
