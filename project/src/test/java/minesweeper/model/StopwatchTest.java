@@ -1,16 +1,23 @@
 package minesweeper.model;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class MockedListener implements StopwatchListener {
     public ArrayList<String> receivedValues = new ArrayList<>();
+    public boolean receivedTimeIsUp = false;
 
     @Override
     public void timeChanged(String newTimeValue) {
         receivedValues.add(newTimeValue);
+    }
+
+    @Override
+    public void timeIsUp() {
+        receivedTimeIsUp = true;
     }
 
 }
@@ -80,6 +87,18 @@ public class StopwatchTest extends TestWithJavaFXTimeline {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.setTime(time);
         Assertions.assertEquals(time, stopwatch.getTime());
+    }
+
+    @Test
+    public void testTimeIsUp() throws InterruptedException {
+        Stopwatch stopwatch = new Stopwatch();
+        MockedListener listener = new MockedListener();
+        stopwatch.addListener(listener);
+        Assertions.assertEquals(1, listener.receivedValues.size());
+        stopwatch.setTime("60:00");
+        stopwatch.sendTimeUpdate();
+        Assertions.assertTrue(listener.receivedTimeIsUp);
+        Assertions.assertEquals(1, listener.receivedValues.size());
     }
 
 }
