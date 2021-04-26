@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>tdt4100-v2021</groupId>
   <artifactId>project</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>TDT4100-Project</name>
   <packaging>jar</packaging>
 
