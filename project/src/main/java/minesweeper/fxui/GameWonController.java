@@ -34,6 +34,7 @@ public class GameWonController {
         String time = parentController.getCurrentTime();
         Score score = new Score(name.getText(), time, parentController.getCurrentDifficultyLevel());
         parentController.highscores.addScore(score);
+        parentController.saveHighscores();
         Scene scene = rootPane.getScene();
         if (scene != null) {
             Stage stage = (Stage) scene.getWindow();

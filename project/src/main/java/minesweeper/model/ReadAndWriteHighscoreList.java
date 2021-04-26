@@ -29,6 +29,4 @@ public class ReadAndWriteHighscoreList implements ReadAndWriteFile<HighscoreList
 			writer.write(data);
 		}
 	}
-
-	
 }

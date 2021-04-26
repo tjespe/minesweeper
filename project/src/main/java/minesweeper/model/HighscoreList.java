@@ -14,7 +14,7 @@ public class HighscoreList {
 		for (String line : lines) {
 			String name = line.split(",")[0];
 			String time = line.split(",")[1];
-			String levelLabel = line.split(",")[2];
+			String levelLabel = line.split(",")[2].strip();
 			DifficultyLevel level = DifficultyLevel.getByLabel(levelLabel);
 			highScores.add(new Score(name, time, level));
 		}
@@ -41,6 +41,6 @@ public class HighscoreList {
 	}
 
 	public Collection<Score> getBestScores(DifficultyLevel level) {
-		return this.highScores.stream().sorted().limit(5).collect(Collectors.toList());
+		return this.highScores.stream().filter(score -> score.getDifficultyLevel() == level).sorted().limit(5).collect(Collectors.toList());
 	}
 }
