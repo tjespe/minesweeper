@@ -1,5 +1,7 @@
 package minesweeper.fxui;
 
+import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -8,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import minesweeper.model.ReadAndWriteHighscoreList;
 import minesweeper.model.Score;
 
 public class GameWonController {
@@ -42,7 +45,15 @@ public class GameWonController {
         String time = parentController.getCurrentTime();
         Score score = new Score(name.getText(), time, parentController.getCurrentDifficultyLevel());
         parentController.highscores.addScore(score);
-        parentController.saveHighscores();
+        try {
+            new ReadAndWriteHighscoreList().writeToFile(parentController.highscores);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Failed to save!");
+            alert.setHeaderText("Failed to save highscore!");
+            alert.setContentText("Unfortunately, an unexpected error occurred and your score could not be saved.");
+            alert.showAndWait();
+        }
         parentController.newGameWithSelectedLevel();
         Scene scene = rootPane.getScene();
         if (scene != null) {
