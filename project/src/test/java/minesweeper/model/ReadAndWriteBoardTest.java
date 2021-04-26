@@ -10,10 +10,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ReadAndWriteBoardTest extends TestWithJavaFXTimeline {
+public class ReadAndWriteBoardTest {
 
 	private Board board;
-	private static ReadAndWriteBoard boardSaver;
 	private static String path;
 
 	@BeforeAll
@@ -21,19 +20,18 @@ public class ReadAndWriteBoardTest extends TestWithJavaFXTimeline {
 		path = System.getProperty("java.io.tmpdir");
 		File file = new File(path);
 		file.mkdir();
-		if (!file.exists()) { 
+		if (!file.exists()) {
 			throw new Exception("Couldn't create directory for tests");
 		}
 		System.setProperty("user.home", path);
-		boardSaver = new ReadAndWriteBoard();
 	}
 
 	@Test
 	public void testReadFromFile() throws IOException {
 		board = new Board(1, 1, 1);
-		boardSaver.writeToFile(board);
+		new ReadAndWriteBoard().writeToFile(board);
 		Board savedGame;
-		savedGame = boardSaver.readFromFile();
+		savedGame = new ReadAndWriteBoard().readFromFile();
 		Assertions.assertEquals(board.toString(), savedGame.toString());
 
 	}
@@ -49,7 +47,7 @@ public class ReadAndWriteBoardTest extends TestWithJavaFXTimeline {
 	@Test
 	public void testWriteToFile() throws IOException {
 		board = new Board(1, 1, 1);
-		boardSaver.writeToFile(board);
+		new ReadAndWriteBoard().writeToFile(board);
 		byte[] game = null;
 		game = Files.readAllBytes(Path.of(System.getProperty("user.home") + "/game-state.mswp"));
 		Assertions.assertNotNull(game);
