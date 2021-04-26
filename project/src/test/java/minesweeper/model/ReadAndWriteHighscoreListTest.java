@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +21,7 @@ public class ReadAndWriteHighscoreListTest {
 		path = System.getProperty("java.io.tmpdir");
 		File file = new File(path);
 		file.mkdir();
-		if (!file.exists()) { 
+		if (!file.exists()) {
 			throw new Exception("Couldn't create directory for tests");
 		}
 		System.setProperty("user.home", path);
@@ -36,8 +35,10 @@ public class ReadAndWriteHighscoreListTest {
 		highscoreSaver.writeToFile(highscoreList);
 		HighscoreList savedHighscoreList;
 		savedHighscoreList = highscoreSaver.readFromFile();
-		Assertions.assertEquals(highscoreList.getAllhighScores(), savedHighscoreList.getAllhighScores());
-}
+		Assertions.assertEquals(highscoreList.getAllhighScores().size(), savedHighscoreList.getAllhighScores().size());
+		Assertions.assertTrue(highscoreList.getAllhighScores().stream().allMatch(score -> savedHighscoreList
+				.getAllhighScores().stream().anyMatch(savedScore -> savedScore.equals(score))));
+	}
 
 	@Test
 	public void testReadNotValidFile() {

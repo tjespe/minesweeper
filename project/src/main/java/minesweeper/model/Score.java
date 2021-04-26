@@ -22,6 +22,10 @@ public class Score implements Comparable<Score> {
 	public DifficultyLevel getDifficultyLevel() {
 		return level;
 	}
+	
+	public boolean equals(Score score) {
+		return this.getTime().equals(score.getTime()) && this.getName().equals(score.getName()) && this.getDifficultyLevel() == score.getDifficultyLevel();
+	}
 
 	@Override
 	public int compareTo(Score score) {
