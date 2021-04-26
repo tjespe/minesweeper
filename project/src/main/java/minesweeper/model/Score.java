@@ -18,7 +18,7 @@ public class Score implements Comparable<Score> {
 	public String getTime() {
 		return time;
 	}
-	
+
 	public DifficultyLevel getDifficultyLevel() {
 		return level;
 	}

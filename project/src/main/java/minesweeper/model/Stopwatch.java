@@ -1,14 +1,14 @@
 package minesweeper.model;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
-import javafx.util.Duration;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class Stopwatch {
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
@@ -30,6 +30,8 @@ public class Stopwatch {
 	}
 
 	private void initializeTimeline() {
+		if (this.timeline != null)
+			throw new IllegalStateException("A timeline object already exists.");
 		timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> sendTimeUpdate()));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
@@ -93,6 +95,7 @@ public class Stopwatch {
 		return DECIMAL_FORMAT.format(minutes) + ":" + DECIMAL_FORMAT.format(seconds);
 	}
 
+	// protected to make it available in unit tests
 	protected void sendTimeUpdate() {
 		for (StopwatchListener listener : this.stopwatchListeners) {
 			if (this.isOutOfTime()) {
