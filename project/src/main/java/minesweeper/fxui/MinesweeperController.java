@@ -40,9 +40,6 @@ public class MinesweeperController implements StopwatchListener {
 	private Board board;
 	protected HighscoreList highscores;
 
-	private static ReadAndWriteHighscoreList highscoreSaver = new ReadAndWriteHighscoreList();
-	private static ReadAndWriteBoard boardSaver = new ReadAndWriteBoard();
-
 	@FXML
 	private ChoiceBox<String> dropDown;
 	@FXML
@@ -64,7 +61,7 @@ public class MinesweeperController implements StopwatchListener {
 		Collection<String> difficultyLabels = DifficultyLevel.getAllLabels();
 		dropDown.getItems().addAll(difficultyLabels.toArray(new String[difficultyLabels.size()]));
 		try {
-			board = boardSaver.readFromFile();
+			board = new ReadAndWriteBoard().readFromFile();
 			board.addStopwatchListener(this);
 			drawBoard();
 			DifficultyLevel level = board.getDifficulty();
@@ -79,8 +76,8 @@ public class MinesweeperController implements StopwatchListener {
 			newGameWithSelectedLevel();
 		});
 		try {
-			highscores = highscoreSaver.readFromFile();
-		} catch (IOException e) {
+			highscores = new ReadAndWriteHighscoreList().readFromFile();
+		} catch (Exception e) {
 			highscores = new HighscoreList();
 		}
 	}
@@ -111,7 +108,7 @@ public class MinesweeperController implements StopwatchListener {
 		} else if (board.getStatus() == Board.LOST) {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("You lost!");
-			alert.setHeaderText("You lost!");
+			alert.setHeaderText("You lost");
 			alert.setContentText("Click OK to restart!");
 			alert.showAndWait();
 			this.newGameWithSelectedLevel();
@@ -125,12 +122,12 @@ public class MinesweeperController implements StopwatchListener {
 		}
 	}
 
-	private void drawBoardField(int row, int col) {
+	private void drawBoardField(int col, int row) {
 		StackPane field = new StackPane();
 		field.setPrefWidth(30);
 		field.setPrefHeight(30);
-		char fieldStatus = board.getFieldStatus(row, col);
-		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: " + getFieldStyle(fieldStatus, row, col));
+		char fieldStatus = board.getFieldStatus(col, row);
+		field.setStyle("-fx-padding: 0; -fx-margin: 0; -fx-background-color: " + getFieldStyle(fieldStatus, col, row));
 		if (fieldStatus == Field.BOMB) {
 			try {
 				Image imgBomb = new Image("/bomb.png");
@@ -143,7 +140,6 @@ public class MinesweeperController implements StopwatchListener {
 		}
 		if (fieldStatus == Field.FLAGGED || fieldStatus == Field.FLAGGED_WITH_BOMB) {
 			try {
-
 				Image imgRedFlag = new Image("/flag.png");
 				ImageView imgRedFlagView = new ImageView(imgRedFlag);
 				field.getChildren().add(imgRedFlagView);
@@ -153,9 +149,9 @@ public class MinesweeperController implements StopwatchListener {
 			}
 		}
 
-		if (board.countAdjacentBombs(row, col) != 0 && fieldStatus == Field.OPENED) {
+		if (board.countAdjacentBombs(col, row) != 0 && fieldStatus == Field.OPENED) {
 			Text numOfAdjacentBombs = new Text();
-			int adjacentBombNum = board.countAdjacentBombs(row, col);
+			int adjacentBombNum = board.countAdjacentBombs(col, row);
 			if (adjacentBombNum == 1) {
 				numOfAdjacentBombs.setFill(Color.BLUE);
 			} else if (adjacentBombNum == 2) {
@@ -165,12 +161,12 @@ public class MinesweeperController implements StopwatchListener {
 			} else if (adjacentBombNum == 4) {
 				numOfAdjacentBombs.setFill(Color.DARKORCHID);
 			}
-			numOfAdjacentBombs.setText(String.valueOf(board.countAdjacentBombs(row, col)));
+			numOfAdjacentBombs.setText(String.valueOf(board.countAdjacentBombs(col, row)));
 			numOfAdjacentBombs.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
 			StackPane.setAlignment(numOfAdjacentBombs, Pos.CENTER);
 			field.getChildren().add(numOfAdjacentBombs);
 		}
-		boardParent.add(field, row + 1, col + 1);
+		boardParent.add(field, col + 1, row + 1);
 	}
 
 	@FXML
@@ -203,7 +199,7 @@ public class MinesweeperController implements StopwatchListener {
 			drawBoard();
 		}
 		try {
-			boardSaver.writeToFile(board);
+			new ReadAndWriteBoard().writeToFile(board);
 			saveStatus.setText("Automatically saved");
 		} catch (IOException e) {
 			saveStatus.setText("Failed to save");
@@ -244,15 +240,7 @@ public class MinesweeperController implements StopwatchListener {
 		newWindow.show();
 	}
 
-	public void saveHighscores() {
-		try {
-			highscoreSaver.writeToFile(highscores);
-		} catch (IOException e) {
-			saveStatus.setText("Failed to save highscores");
-		}
-	}
-
-	public void showGameWonModal() throws IOException {
+	private void showGameWonModal() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
 		Parent gameWonScene = loader.load();
 		GameWonController childController = loader.getController();
@@ -278,15 +266,15 @@ public class MinesweeperController implements StopwatchListener {
 		timer.setText(newTimeValue);
 	}
 
-	public String getCurrentTime() {
+	protected String getCurrentTime() {
 		return timer.getText();
 	}
 
-	public DifficultyLevel getCurrentDifficultyLevel() {
+	protected DifficultyLevel getCurrentDifficultyLevel() {
 		return DifficultyLevel.getByLabel(dropDown.getValue());
 	}
 
-	public void updateFlagCount() {
+	private void updateFlagCount() {
 		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
 	}
 
