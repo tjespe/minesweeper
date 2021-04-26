@@ -25,6 +25,8 @@ public class Board {
             LEFTBELOW };
 
     private void createFields(int height, int width, int bombCount) {
+        if (fields != null)
+            throw new IllegalStateException("Fields already created");
         fields = new ArrayList<>();
         int placedBombs = 0;
         for (int i = 0; i < height; i++) {
@@ -124,8 +126,12 @@ public class Board {
     private void openAllBombs() {
         for (Collection<Field> row : this.fields)
             for (Field cell : row)
-                if (cell.getHasBomb() && !cell.getIsOpened())
+                // Open all unflagged fields that has bombs
+                if (cell.getHasBomb() && !cell.getIsOpened() && !cell.getIsFlagged())
                     cell.open();
+                // Remove any misplaced flags to let the user know they've made
+                else if (cell.getIsFlagged() && !cell.getHasBomb())
+                    cell.toggleFlag();
 
     }
 

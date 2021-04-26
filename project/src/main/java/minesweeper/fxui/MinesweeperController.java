@@ -80,7 +80,7 @@ public class MinesweeperController implements StopwatchListener {
 		});
 		try {
 			highscores = highscoreSaver.readFromFile();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			highscores = new HighscoreList();
 		}
 	}
@@ -269,6 +269,7 @@ public class MinesweeperController implements StopwatchListener {
 			Window rootStage = rootScene.getWindow();
 			newWindow.initOwner(rootStage);
 		}
+		newWindow.setResizable(false);
 		newWindow.initModality(Modality.WINDOW_MODAL);
 		newWindow.show();
 	}

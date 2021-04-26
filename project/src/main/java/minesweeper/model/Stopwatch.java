@@ -96,6 +96,7 @@ public class Stopwatch {
 		return DECIMAL_FORMAT.format(minutes) + ":" + DECIMAL_FORMAT.format(seconds);
 	}
 
+	// protected to make it available in unit tests
 	protected void sendTimeUpdate() {
 		for (StopwatchListener listener : this.stopwatchListeners) {
 			if (this.isOutOfTime()) {
