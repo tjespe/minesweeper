@@ -9,7 +9,7 @@ import java.io.Writer;
 import java.util.Scanner;
 
 public class ReadAndWriteBoard implements ReadAndWriteFile<Board> {
-	private final String FILE_PATH = System.getProperty("user.home") + "/game-state.mswp";
+	private static final String FILE_PATH = System.getProperty("user.home") + "/game-state.mswp";
 
 	@Override
 	public Board readFromFile() throws IOException {
