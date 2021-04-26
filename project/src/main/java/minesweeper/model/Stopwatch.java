@@ -59,7 +59,10 @@ public class Stopwatch {
 		if (!this.hasStarted())
 			throw new IllegalStateException("Cannot stop before starting");
 		this.stopTime = System.currentTimeMillis();
-		timeline.stop();
+		if (this.timeline != null) {
+			timeline.stop();
+			this.timeline = null;
+		}
 	}
 
 	public boolean hasStarted() {
