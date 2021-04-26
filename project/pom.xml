@@ -4,7 +4,7 @@
   <artifactId>project</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>TDT4100-Project</name>
-  <packaging>jar</packaging>
+  <packaging>shade</packaging>
 
   <distributionManagement>
     <repository>
