@@ -2,15 +2,19 @@ package minesweeper.fxui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import minesweeper.model.Score;
 
 public class HighscoreListController {
-
 	@FXML
 	private ListView<String> highscores;
+
+	@FXML
+	private GridPane highscoreTable;
 
 	private MinesweeperController parentController;
 
@@ -26,10 +30,17 @@ public class HighscoreListController {
 	private void loadHighscoreList() {
 		if (parentController == null)
 			return;
-		System.out.println(parentController.highscores.getBestScores(parentController.getCurrentDifficultyLevel()));
-		Collection<Score> topFive = new ArrayList<>(parentController.highscores.getBestScores(parentController.getCurrentDifficultyLevel()));
+		Collection<Score> topFive = new ArrayList<>(
+				parentController.highscores.getBestScores(parentController.getCurrentDifficultyLevel()));
+		int i = 0;
 		for (Score score : topFive) {
-			highscores.getItems().add(String.format("%-37s %10s", score.getName(), score.getTime()));
+			Text name = new Text(score.getName());
+			Text time = new Text(score.getTime());
+			name.setFont(Font.font("Verdana", 12));
+			time.setFont(Font.font("Verdana", 12));
+			highscoreTable.add(name, 0, i);
+			highscoreTable.add(time, 1, i);
+			i++;
 		}
 	}
 }

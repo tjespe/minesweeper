@@ -2,7 +2,6 @@ package minesweeper.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
