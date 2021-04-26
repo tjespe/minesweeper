@@ -1,19 +1,16 @@
 package minesweeper.model;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import javafx.util.Duration;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 
 public class Stopwatch {
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
 
-	private Timeline timeline;
+	private Timer timer;
 	private Long startTime;
 	private Long stopTime;
 	private Collection<StopwatchListener> stopwatchListeners = new HashSet<>();
@@ -30,15 +27,21 @@ public class Stopwatch {
 	}
 
 	private void initializeTimeline() {
-		timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> sendTimeUpdate()));
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
+		if (this.timer != null)
+			throw new IllegalStateException("A timeline object already exists.");
+		this.timer = new Timer();
+		this.timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				sendTimeUpdate();
+			}
+		}, 0, 1000);
 	}
 
 	public void start() {
 		if (this.hasStarted())
 			throw new IllegalStateException("Stopwatch already started");
-		startTime = System.currentTimeMillis();
+		this.startTime = System.currentTimeMillis();
 		sendTimeUpdate();
 		initializeTimeline();
 	}
@@ -59,9 +62,9 @@ public class Stopwatch {
 		if (!this.hasStarted())
 			throw new IllegalStateException("Cannot stop before starting");
 		this.stopTime = System.currentTimeMillis();
-		if (this.timeline != null) {
-			timeline.stop();
-			this.timeline = null;
+		if (this.timer != null) {
+			this.timer.cancel();
+			this.timer = null;
 		}
 	}
 
@@ -70,6 +73,8 @@ public class Stopwatch {
 	}
 
 	private long getMillis() {
+		if (!this.hasStarted())
+			return 0;
 		return stopTime == null ? System.currentTimeMillis() - startTime : stopTime - startTime;
 	}
 
@@ -78,8 +83,6 @@ public class Stopwatch {
 	}
 
 	public String getTime() {
-		if (!hasStarted())
-			return DECIMAL_FORMAT.format(0) + ":" + DECIMAL_FORMAT.format(0);
 		long currentTime = this.getMillis();
 
 		if (this.isOutOfTime()) {
