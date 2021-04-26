@@ -25,9 +25,17 @@ public class GameWonController {
     @FXML
     public void submitClickHandler(MouseEvent event) {
         if (parentController == null) {
-            Alert alert = new Alert(AlertType.INFORMATION);
+            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Unexpected error!");
             alert.setHeaderText("Unexpected error!");
+            alert.showAndWait();
+            return;
+        }
+        if (name.getText().length() == 0) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Please enter a name!");
+            alert.setHeaderText("Please enter a name!");
+            alert.setContentText("Please enter a name to submit your score.");
             alert.showAndWait();
             return;
         }
@@ -35,6 +43,7 @@ public class GameWonController {
         Score score = new Score(name.getText(), time, parentController.getCurrentDifficultyLevel());
         parentController.highscores.addScore(score);
         parentController.saveHighscores();
+        parentController.newGameWithSelectedLevel();
         Scene scene = rootPane.getScene();
         if (scene != null) {
             Stage stage = (Stage) scene.getWindow();
