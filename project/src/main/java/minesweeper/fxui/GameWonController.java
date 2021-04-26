@@ -34,10 +34,10 @@ public class GameWonController {
             alert.showAndWait();
             return;
         }
-        if (name.getText().length() == 0) {
+        if (name.getText().length() == 0 || name.getText().length() > 15) {
             Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Please enter a name!");
-            alert.setHeaderText("Please enter a name!");
+            alert.setTitle("Please enter a new name!");
+            alert.setHeaderText("Please enter a name with maximun 15 characters!");
             alert.setContentText("Please enter a name to submit your score.");
             alert.showAndWait();
             return;
@@ -61,5 +61,4 @@ public class GameWonController {
             stage.close();
         }
     }
-
 }
