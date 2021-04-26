@@ -124,8 +124,12 @@ public class Board {
     private void openAllBombs() {
         for (Collection<Field> row : this.fields)
             for (Field cell : row)
-                if (cell.getHasBomb() && !cell.getIsOpened())
+                // Open all unflagged fields that has bombs
+                if (cell.getHasBomb() && !cell.getIsOpened() && !cell.getIsFlagged())
                     cell.open();
+                // Remove any misplaced flags to let the user know they've made
+                else if (cell.getIsFlagged() && !cell.getHasBomb())
+                    cell.toggleFlag();
 
     }
 
