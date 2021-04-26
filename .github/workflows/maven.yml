@@ -21,7 +21,8 @@ jobs:
           java-version: "15"
           distribution: "adopt"
       - name: Publish to GitHub Packages
-        run: mvn --batch-mode deploy --file pom.xml
+        run: mvn --batch-mode deploy --file pom_with_maven_fx.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_OPTS: "--enable-preview"
         working-directory: project
