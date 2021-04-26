@@ -42,6 +42,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
+                    <argLine>--enable-preview</argLine>
                     <release>15</release>
                     <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
@@ -49,6 +50,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
+                <argLine>--enable-preview</argLine>
                 <configuration>
                     <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
@@ -58,6 +60,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.5</version>
                 <configuration>
+                    <argLine>--enable-preview</argLine>
                     <options>
                         <option>--enable-preview</option>
                     </options>
