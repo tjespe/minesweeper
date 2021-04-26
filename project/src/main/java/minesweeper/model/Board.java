@@ -25,6 +25,8 @@ public class Board {
             LEFTBELOW };
 
     private void createFields(int height, int width, int bombCount) {
+        if (fields != null)
+            throw new IllegalStateException("Fields already created");
         fields = new ArrayList<>();
         int placedBombs = 0;
         for (int i = 0; i < height; i++) {
