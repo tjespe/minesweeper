@@ -18,6 +18,10 @@ public class Score implements Comparable<Score> {
 	public String getTime() {
 		return time;
 	}
+	
+	public DifficultyLevel getDifficultyLevel() {
+		return level;
+	}
 
 	@Override
 	public int compareTo(Score score) {
@@ -26,6 +30,6 @@ public class Score implements Comparable<Score> {
 
 	@Override
 	public String toString() {
-		return getName() + "," + getTime() + "," + (this.level != null ? this.level.toString() : "Unknown");
+		return getName() + "," + getTime() + "," + (this.level != null ? this.level.getLabel() : "Unknown");
 	}
 }
