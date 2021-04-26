@@ -78,7 +78,6 @@ public class MinesweeperController implements StopwatchListener {
 			newGameWithSelectedLevel();
 		});
 		try {
-			// TODO: Make sure to read correct file based on difficulty level
 			highscores = highscoreSaver.readFromFile();
 		} catch (IOException e) {
 			highscores = new HighscoreList();
@@ -242,6 +241,14 @@ public class MinesweeperController implements StopwatchListener {
 		}
 		newWindow.initModality(Modality.WINDOW_MODAL);
 		newWindow.show();
+	}
+	
+	public void saveHighscores() {
+		try {
+			highscoreSaver.writeToFile(highscores);
+		} catch (IOException e) {
+			saveStatus.setText("Failed to save highscores");
+		}
 	}
 
 	public void showGameWonModal() throws IOException {
