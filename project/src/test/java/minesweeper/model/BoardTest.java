@@ -134,7 +134,6 @@ public class BoardTest extends TestWithJavaFXTimeline {
 
 		// Validate that the bomb was not opened automatically
 		Assertions.assertEquals(Field.UNOPENED_WITH_BOMB, board.getFieldStatus(bombCoords[0], bombCoords[1]));
-
 	}
 
 	@Test

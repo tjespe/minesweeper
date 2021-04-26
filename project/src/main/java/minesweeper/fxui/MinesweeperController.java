@@ -80,7 +80,7 @@ public class MinesweeperController implements StopwatchListener {
 		});
 		try {
 			highscores = highscoreSaver.readFromFile();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			highscores = new HighscoreList();
 		}
 	}
