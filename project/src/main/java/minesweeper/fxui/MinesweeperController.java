@@ -25,6 +25,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import minesweeper.model.Board;
 import minesweeper.model.ReadAndWriteBoard;
@@ -78,7 +79,6 @@ public class MinesweeperController implements StopwatchListener {
 			newGameWithSelectedLevel();
 		});
 		try {
-			// TODO: Make sure to read correct file based on difficulty level
 			highscores = highscoreSaver.readFromFile();
 		} catch (IOException e) {
 			highscores = new HighscoreList();
@@ -148,7 +148,7 @@ public class MinesweeperController implements StopwatchListener {
 				ImageView imgRedFlagView = new ImageView(imgRedFlag);
 				field.getChildren().add(imgRedFlagView);
 			} catch (Exception e) {
-				Text fallback = new Text("💣");
+				Text fallback = new Text("⛳");
 				field.getChildren().add(fallback);
 			}
 		}
@@ -227,7 +227,6 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void showHighscores() throws IOException {
-
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("HighscoreList.fxml"));
 		Parent highscoreListScene = loader.load();
 		HighscoreListController highscoreListController = loader.getController();
@@ -245,6 +244,14 @@ public class MinesweeperController implements StopwatchListener {
 		newWindow.show();
 	}
 
+	public void saveHighscores() {
+		try {
+			highscoreSaver.writeToFile(highscores);
+		} catch (IOException e) {
+			saveStatus.setText("Failed to save highscores");
+		}
+	}
+
 	public void showGameWonModal() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
 		Parent gameWonScene = loader.load();
@@ -254,6 +261,8 @@ public class MinesweeperController implements StopwatchListener {
 		Stage newWindow = new Stage();
 		newWindow.setTitle("You won!");
 		newWindow.setScene(new Scene(gameWonScene));
+		newWindow.setResizable(false);
+		newWindow.initStyle(StageStyle.UNDECORATED);
 
 		Scene rootScene = rootPane.getScene();
 		if (rootScene != null) {
@@ -280,5 +289,19 @@ public class MinesweeperController implements StopwatchListener {
 
 	public void updateFlagCount() {
 		numOfFlagsLeft.setText(String.valueOf(board.getRemainingFlags()));
+	}
+
+	@Override
+	public void timeIsUp() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("You lost!");
+		alert.setHeaderText("Time is up!");
+		alert.setContentText(
+				"You have spent more than 1 hour, which is the maximum time allowed. Click OK to restart.");
+		alert.setOnHidden(evt -> {
+			this.newGameWithSelectedLevel();
+			this.drawBoard();
+		});
+		alert.show();
 	}
 }

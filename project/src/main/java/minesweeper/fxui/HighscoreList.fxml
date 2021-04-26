@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -18,7 +18,8 @@
         <rowConstraints>
           <RowConstraints maxHeight="119.0" minHeight="10.0" prefHeight="75.33332824707031" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="214.0" minHeight="10.0" prefHeight="52.66667175292969" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="214.0" minHeight="10.0" prefHeight="214.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="214.0" minHeight="10.0" prefHeight="52.66667175292969" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="214.0" minHeight="10.0" prefHeight="214.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Highscores" GridPane.halignment="CENTER">
@@ -28,7 +29,7 @@
             </Text>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" GridPane.rowIndex="1">
                <font>
-                  <Font name="Verdana" size="12.0" />
+                  <Font name="Verdana Italic" size="12.0" />
                </font>
                <GridPane.margin>
                   <Insets left="10.0" />
@@ -39,10 +40,26 @@
                   <Insets right="70.0" />
                </GridPane.margin>
                <font>
-                  <Font name="Verdana" size="12.0" />
+                  <Font name="Verdana Italic" size="12.0" />
                </font>
             </Text>
-            <ListView fx:id="highscores" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
+            <GridPane fx:id="highscoreTable" GridPane.rowIndex="3">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.00000762939453" minWidth="10.0" prefWidth="134.6666259765625" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.66668701171875" minWidth="10.0" prefWidth="99.3333740234375" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </GridPane>
+            <Line endX="143.2928924560547" endY="0.1103532537817955" startX="-100.0" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>
