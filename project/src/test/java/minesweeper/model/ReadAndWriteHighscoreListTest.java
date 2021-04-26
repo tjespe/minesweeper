@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 public class ReadAndWriteHighscoreListTest {
 
 	private HighscoreList highscoreList;
-	private static ReadAndWriteHighscoreList highscoreSaver;
 	private static String path;
 
 	@BeforeAll
@@ -25,16 +24,15 @@ public class ReadAndWriteHighscoreListTest {
 			throw new Exception("Couldn't create directory for tests");
 		}
 		System.setProperty("user.home", path);
-		highscoreSaver = new ReadAndWriteHighscoreList();
 	}
 
 	@Test
 	public void testReadFromFile() throws IOException {
 		highscoreList = new HighscoreList();
 		highscoreList.addScore(new Score("Kristoffer", "01:30", DifficultyLevel.NORMAL));
-		highscoreSaver.writeToFile(highscoreList);
+		new ReadAndWriteHighscoreList().writeToFile(highscoreList);
 		HighscoreList savedHighscoreList;
-		savedHighscoreList = highscoreSaver.readFromFile();
+		savedHighscoreList = new ReadAndWriteHighscoreList().readFromFile();
 		Assertions.assertEquals(highscoreList.getAllhighScores().size(), savedHighscoreList.getAllhighScores().size());
 		Assertions.assertTrue(highscoreList.getAllhighScores().stream().allMatch(score -> savedHighscoreList
 				.getAllhighScores().stream().anyMatch(savedScore -> savedScore.equals(score))));
@@ -51,7 +49,7 @@ public class ReadAndWriteHighscoreListTest {
 	@Test
 	public void testWriteToFile() throws IOException {
 		highscoreList = new HighscoreList();
-		highscoreSaver.writeToFile(highscoreList);
+		new ReadAndWriteHighscoreList().writeToFile(highscoreList);
 		byte[] game = null;
 		game = Files.readAllBytes(Path.of(System.getProperty("user.home") + "/game-state.mswp"));
 		Assertions.assertNotNull(game);

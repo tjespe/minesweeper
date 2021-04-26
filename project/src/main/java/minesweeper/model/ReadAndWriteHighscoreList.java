@@ -8,13 +8,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Scanner;
 
-public class ReadAndWriteHighscoreList implements ReadAndWriteFile<HighscoreList>{
+public class ReadAndWriteHighscoreList implements ReadAndWriteFile<HighscoreList> {
+	private final String filePath = System.getProperty("user.home") + "/highscore-state.mswp";
 
-	private static final String FILE_PATH = System.getProperty("user.home") + "/highscore-state.mswp";
-	
 	@Override
 	public HighscoreList readFromFile() throws IOException {
-		Scanner scanner = new Scanner(new File(FILE_PATH));
+		Scanner scanner = new Scanner(new File(filePath));
 		String content = scanner.useDelimiter("\\Z").next();
 		scanner.close();
 		return new HighscoreList(content);
@@ -25,7 +24,7 @@ public class ReadAndWriteHighscoreList implements ReadAndWriteFile<HighscoreList
 		if (highscoreList == null)
 			throw new IllegalStateException("No HighscoreList loaded");
 		String data = highscoreList.getSerializedHighscores();
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "utf-8"))) {
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), "utf-8"))) {
 			writer.write(data);
 		}
 	}

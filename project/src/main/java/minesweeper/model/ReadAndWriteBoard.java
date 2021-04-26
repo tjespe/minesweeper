@@ -9,11 +9,11 @@ import java.io.Writer;
 import java.util.Scanner;
 
 public class ReadAndWriteBoard implements ReadAndWriteFile<Board> {
-	private static final String FILE_PATH = System.getProperty("user.home") + "/game-state.mswp";
+	private final String filePath = System.getProperty("user.home") + "/game-state.mswp";
 
 	@Override
 	public Board readFromFile() throws IOException {
-		Scanner scanner = new Scanner(new File(FILE_PATH)); 
+		Scanner scanner = new Scanner(new File(filePath));
 		String content = scanner.useDelimiter("\\Z").next();
 		scanner.close();
 		return new Board(content);
@@ -24,7 +24,7 @@ public class ReadAndWriteBoard implements ReadAndWriteFile<Board> {
 		if (board == null)
 			throw new IllegalStateException("No Board loaded");
 		String data = board.getSerializedState();
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_PATH), "utf-8"))) {
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), "utf-8"))) {
 			writer.write(data);
 		}
 	}
