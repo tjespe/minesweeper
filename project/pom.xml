@@ -4,7 +4,7 @@
   <artifactId>project</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>TDT4100-Project</name>
-  <packaging>shade</packaging>
+  <packaging>jar</packaging>
 
   <distributionManagement>
     <repository>
@@ -58,40 +58,24 @@
   		</plugin>
   		
   		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-jar-plugin</artifactId>
-  			<configuration>
-  				<archive>
-  					<manifest>
-  						<addClasspath>true</addClasspath>
-  						<mainClass>minesweeper.fxui.MinesweeperApp</mainClass>
-  					</manifest>
-  				</archive>
-  			</configuration>
-  		</plugin>
-  		<plugin>
-  			<artifactId>maven-assembly-plugin</artifactId>
-  			<configuration>
-  				<archive>
-  					<manifest>
-  						<addClasspath>true</addClasspath>
-  						<mainClass>minesweeper.fxui.MinesweeperApp</mainClass>
-  					</manifest>
-  				</archive>
-  				<descriptorRefs>
-  					<descriptorRef>jar-with-dependencies</descriptorRef>
-  				</descriptorRefs>
-  			</configuration>
-  			<executions>
-  				<execution>
-  					<id>make-jar-with-dependencies</id>
-  					<phase>package</phase>
-  					<goals>
-  						<goal>single</goal>
-  					</goals>
-  				</execution>
-  			</executions>
-  		</plugin>
+			<artifactId>maven-shade-plugin</artifactId>
+			<version>3.2.1</version>
+			<executions>
+				<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>shade</goal>
+					</goals>
+					<configuration>
+						<transformers>
+							<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<mainClass>my.package.name.SuperMain</mainClass>
+							</transformer>
+						</transformers>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
   	</plugins>
   </build>
 </project>
