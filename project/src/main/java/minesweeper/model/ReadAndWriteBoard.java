@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class ReadAndWriteBoard implements ReadAndWriteFile<Board> {
@@ -27,5 +29,9 @@ public class ReadAndWriteBoard implements ReadAndWriteFile<Board> {
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), "utf-8"))) {
 			writer.write(data);
 		}
+	}
+
+	public void deleteFile() throws IOException {
+		Files.delete(FileSystems.getDefault().getPath(filePath));
 	}
 }
