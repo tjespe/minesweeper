@@ -94,6 +94,13 @@ public class MinesweeperController implements StopwatchListener {
 			}
 		}
 
+		if (board.getStatus() != Board.PLAYING)
+			try {
+				new ReadAndWriteBoard().deleteFile();
+			} catch (IOException e) {
+				// In this case, this exception is not fatal so we don't need to handle it
+			}
+
 		if (board.getStatus() == Board.WON) {
 			try {
 				this.showGameWonModal();
@@ -204,7 +211,6 @@ public class MinesweeperController implements StopwatchListener {
 		} catch (IOException e) {
 			saveStatus.setText("Failed to save");
 		}
-
 	}
 
 	private String getFieldStyle(char fieldStatus, int x, int y) {
