@@ -10,51 +10,33 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ReadAndWriteBoardTest {
+class ReadAndWriteBoardTest {
 
-	private Board board;
-	private static String path;
-
-	@BeforeAll
-	static void setUp() throws Exception {
-		path = System.getProperty("java.io.tmpdir");
-		File file = new File(path);
-		file.mkdir();
-		if (!file.exists()) {
-			throw new Exception("Couldn't create directory for tests");
-		}
-		System.setProperty("user.home", path);
-	}
+	private static String directory = System.getProperty("java.io.tmpdir");
 
 	@Test
-	public void testReadFromFile() throws IOException {
-		board = new Board(1, 1, 1);
-		new ReadAndWriteBoard().writeToFile(board);
-		Board savedGame;
-		savedGame = new ReadAndWriteBoard().readFromFile();
+	void testReadFromFile() throws IOException {
+		Board board = new Board(1, 1, 1);
+		String path = directory + "/game-state-read-test.mswp";
+		new ReadAndWriteBoard().writeToFile(board, path);
+		Board savedGame = new ReadAndWriteBoard().readFromFile(path);
 		Assertions.assertEquals(board.toString(), savedGame.toString());
 
 	}
 
 	@Test
-	public void testReadNotValidFile() {
-		System.setProperty("user.home", "/some/path/that/does/not/exist");
-		Assertions.assertThrows(Exception.class, () -> board = new ReadAndWriteBoard().readFromFile(),
+	void testReadNotValidFile() {
+		Assertions.assertThrows(Exception.class,
+				() -> new ReadAndWriteBoard().readFromFile("/some/path/that/does/not/exist"),
 				"Loading an invalid file should throw an exception");
-		System.setProperty("user.home", path);
 	}
 
 	@Test
-	public void testWriteToFile() throws IOException {
-		board = new Board(1, 1, 1);
-		new ReadAndWriteBoard().writeToFile(board);
-		byte[] game = null;
-		game = Files.readAllBytes(Path.of(path + "/game-state.mswp"));
+	void testWriteToFile() throws IOException {
+		Board board = new Board(1, 1, 1);
+		String path = directory + "/game-state-write-test.mswp";
+		new ReadAndWriteBoard().writeToFile(board, path);
+		byte[] game = Files.readAllBytes(Path.of(path));
 		Assertions.assertNotNull(game);
-	}
-
-	@AfterAll
-	static void tearDown() {
-		System.clearProperty("user.home");
 	}
 }
