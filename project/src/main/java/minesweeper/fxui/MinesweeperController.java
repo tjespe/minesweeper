@@ -229,7 +229,7 @@ public class MinesweeperController implements StopwatchListener {
 
 	@FXML
 	public void showHighscores() throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("HighscoreList.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HighscoreList.fxml"));
 		Parent highscoreListScene = loader.load();
 		HighscoreListController highscoreListController = loader.getController();
 		highscoreListController.setParentController(this);
@@ -247,7 +247,7 @@ public class MinesweeperController implements StopwatchListener {
 	}
 
 	private void showGameWonModal() throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("GameWon.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameWon.fxml"));
 		Parent gameWonScene = loader.load();
 		GameWonController childController = loader.getController();
 		if (childController != null)
